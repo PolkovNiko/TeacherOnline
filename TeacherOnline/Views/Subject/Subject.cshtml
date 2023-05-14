@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Предметы";
+}
+@*@model IEnumerable<Departmen>*@
+<h2>@ViewData["Title"]</h2>
+
+<a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать отдел<br /></a>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Название отдела</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th scope="col">Действие</th>
+                <th scope="col">Действие</th>
+            } @*тут проверочка на иденцифицированного пользователя*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model){
+            <tr>
+                <th scope="row">
+                    <a class="btn btn-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a
+                    ></th>
+                @if(User.IsInRole("Admin"))
+                {
+                <td>
+                        <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
+                        <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
+                    </form>
+                </td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

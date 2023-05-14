@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Поиск";
+    
+}
+@model IEnumerable<Praktika.Models.Profile>
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <form asp-controller="Home" asp-action="Search" method="post">
+        <div class="w-50">
+            <label for="Search" class="form-label">Запрос:</label>
+            <input type="text" class="form-control"  name="Query">
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">День рождения</th>
+            <th scope="col">Группа</th>
+            <th scope="col">О себе</th>
+            <th scope="col">Фотография</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.LastName</td>
+                <td>@item.FirstName</td>
+                <td>@item.Otchestvo</td>
+                @{
+                    string x, y;
+                    string date = "";
+                    if (item.Date.Month < 10)
+                    {
+                        x = "0" + item.Date.Month;
+                        if (item.Date.Day < 10)
+                        {
+                            y = "0" + item.Date.Day;
+                            date = item.Date.Year + "-" + x + "-" + y;
+                        }
+                        else
+                        { date = item.Date.Year + "-" + x + "-" + item.Date.Day; }
+
+                    }
+                    else if (item.Date.Day < 10)
+                    {
+                        y = "0" + item.Date.Day;
+                        date = item.Date.Year + "-" + item.Date.Month + "-" + y;
+                    }
+                }
+                <td>@date</td>
+                <td>@item.Group</td>
+                <td>@item.About</td>
+                <td><img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Photo))" /></td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*foreach(){
+    вставляется таблица с строками
+}*@

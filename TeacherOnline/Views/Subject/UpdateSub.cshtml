@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Изменить";
+}
+@model IEnumerable<TeacherOnline.DAL.Entities.Subject>
+
+<form asp-controller="Subject" asp-action="UpdateSub" method="post">
+    <div class="mb-3">
+        @foreach(var item in Model)
+        {
+            if(item.Id.ToString() == ViewData["idsub"]?.ToString())
+            {
+                <label class="form-label">Название отдела</label>
+                <input type="text" class="form-control" value="@item.Name" name="Name">
+                <label class="form-label">Босс</label>
+                <input readonly type="text" id="disableInput" class="form-control" name="IdTeacher" value="@item.IdTeacher"> @*тут нужно сделать выбор учителя *@
+                <label class="form-label">Об отделе</label>
+                <input type="text" class="form-control" name="About" value="@item.About">         
+            }
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Создать пользователя</button>
+</form>

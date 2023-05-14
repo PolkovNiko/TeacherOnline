@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Все сотрудники";
+    int i = 0;
+}
+@model IEnumerable<Praktika.Models.Profile>
+<h2>@ViewData["Title"]</h2>
+
+<!--тут цикл для всех пользователей -->
+@foreach(var item in Model)
+{
+    @*if(item.Department.ToString() == ViewData["dep"]?.ToString())
+    {
+        i++;
+        <div class="container g-5" style="margin-top: 20px; margin-left:-53px">
+            <div class="col">
+                <div class="card" style="width: 11.25rem;">
+                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Photo))" class="card-img-top" style="width:200px; height:200px;">
+                  <div class="card-body">
+                    <h5 class="card-title">@item.Fio</h5>
+                    <p class="card-text">номер телефона: @item.Number </p>
+                  </div>
+                </div>
+            </div>
+        </div>
+    }*@
+    if (i == 0)
+    {
+        <h1>Сотрудников в данном отделе нет!!!</h1>
+        <h1>Приходите завтра</h1>
+    }
+}
+
+
+@*@foreach(var item in Staff)
+{
+    
+}*@
