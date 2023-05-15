@@ -13,8 +13,8 @@
 <p>
     <input type="submit" value="Добавить" />
 </p>
-*@
-@*@if (User.Identity.IsAuthenticated && ViewData["rank"]?.ToString() == "Admin")
+
+@if (User.Identity.IsAuthenticated && ViewData["rank"]?.ToString() == "Admin")
 {
     <p>
         Список пользователей

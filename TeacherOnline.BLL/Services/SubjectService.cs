@@ -1,4 +1,5 @@
-﻿using TeacherOnline.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 
@@ -33,7 +34,7 @@ namespace TeacherOnline.BLL.Services
 
         public void Delete(int id)
         {
-            Subject Subject = _context.Subjects.FirstOrDefault(e => e.Id == id);
+            Subject Subject = _context.Subjects.FirstOrDefault(u => u.Id == id);
             if (Subject != null)
             {
                 _context.Subjects.Remove(Subject);
@@ -43,17 +44,17 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<Subject> Find(Func<Subject, bool> predicate)
         {
-            return _context.Subjects.Where(predicate).AsEnumerable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation).Where(predicate).AsEnumerable();
         }
 
         public IQueryable<Subject> Get(int id)
         {
-            return _context.Subjects.Where(u => u.Id == id).AsQueryable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation).Where(u => u.Id == id).AsQueryable();
         }
 
         public IEnumerable<Subject> GetAll()
         {
-            return _context.Subjects.AsEnumerable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation).AsEnumerable();
         }
     }
 }

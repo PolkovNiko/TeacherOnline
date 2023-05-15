@@ -43,21 +43,32 @@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <ul>@User.Identity.Name</ul>
+                            }
                             <a class="nav-link dropdown-toggle" id="text_color" data-bs-toggle="dropdown"><i class="fa-regular fa-user"></i></a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @*this be a validate on autorizable users*@
-                                <li><a class="dropdown-item" asp-controller="Users" asp-action="Autorization">Авторизация</a></li>
-                                <li>
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Autorization">Авторизация</a></li>
+                                }
+                                @*<li>
                                     <a class="dropdown-item" asp-controller="Users" asp-action="UserProfile">
 
                                         @if (ViewData["fio"] != null)
                                         {
                                             @ViewData["fio"]
                                         }
-                                        @*тут через спец возможность фио юзера*@
+                                        тут через спец возможность фио юзера
                                     </a>
-                                </li>
-                                <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+                                </li>*@
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="UserProfile">Профиль</a></li>
+                                    <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+                                }
                             </ul>
                         </li>
                     </ul>
@@ -73,7 +84,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Praktika
+            &copy; 2023 - Дипломный проект
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

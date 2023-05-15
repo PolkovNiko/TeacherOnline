@@ -1,4 +1,5 @@
-﻿using TeacherOnline.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 
@@ -44,17 +45,17 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<Estimate> Find(Func<Estimate, bool> predicate)
         {
-            return _context.Estimates.Where(predicate).AsEnumerable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).Where(predicate).AsEnumerable();
         }
 
         public IQueryable<Estimate> Get(int id)
         {
-            return _context.Estimates.Where(u => u.Id == id).AsQueryable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).Where(u => u.Id == id).AsQueryable();
         }
 
         public IEnumerable<Estimate> GetAll()
         {
-            return _context.Estimates.AsEnumerable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).AsEnumerable();
         }
 
     }
