@@ -10,19 +10,19 @@
       <div class="mb-3">
         <input readonly hidden type="number" class="form-control" value="@ViewData["idUser"]" name="Id">
         <label for="InputLogin" class="form-label">Логин</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@Model.AsQueryable().GetEnumerator().Current.Login" name="Login">
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@Model.GetEnumerator().Current.Login" name="Login">
         <div id="emailHelp" class="form-text">Никому не сообщайте свой логин</div>
         <label for="exampleInputPassword1" class="form-label">Пароль</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" value="@Model.AsQueryable().GetEnumerator().Current.Password" name="Password">
+        <input type="password" class="form-control" id="exampleInputPassword1" value="@Model.GetEnumerator().Current.Password" name="Password">
         <div id="passwordHelpBlock" class="form-text">
             Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должен содержать пробелов,эмодзи.
         </div>
         <label for="InputEmail" class="form-label">Почта</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@Model.AsQueryable().GetEnumerator().Current.Email" name="Email">
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@Model.GetEnumerator().Current.Email" name="Email">
         <div id="emailHelp" class="form-text">Мы данные о вашей почте никому не передаём</div>
         <label for="exampleInputEmail1" class="form-label">Тип пользователя</label>
         <select class="form-select" aria-label="rank" name="Rank" >
-            @if (Model.AsQueryable().GetEnumerator().Current.Rank == "Study")
+            @if (Model.GetEnumerator().Current.Rank == "Study")
             {
                 <option selected value="Study">Студент</option>
                 <option value="Admin">Админ</option>

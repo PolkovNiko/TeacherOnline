@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
@@ -10,12 +11,12 @@ namespace TeacherOnline.Controllers
 {
     public class SubjectController : Controller
     {
-        SubjectService _subject;
-        ProfileService _profile;
-        EstimateService _estimate;
+        ISubject _subject;
+        IProfile _profile;
+        IEstimate _estimate;
 
 
-        public SubjectController(SubjectService subject, ProfileService profile, EstimateService estimate) 
+        public SubjectController(ISubject subject, IProfile profile, IEstimate estimate) 
         { 
             _subject = subject;
             _profile = profile;
@@ -29,41 +30,41 @@ namespace TeacherOnline.Controllers
 
         public IActionResult Subject()
         {
-            ViewData["Id"] = HttpContext.Request.Cookies["Id"]; //пересмотреть отправляемые данные
+            ViewData["Id"] = HttpContext.Session.GetInt32("Id").ToString(); //пересмотреть отправляемые данные
             return View(_subject.GetAll());
         }
 
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateSub()
         {
-            ViewData["Id"] = HttpContext.Request.Cookies["Id"]; //пересмотреть отправляемые данные
+            //ViewData["Id"] = HttpContext.Request.Cookies["Id"]; //пересмотреть отправляемые данные
             //тут через include нужно реализовать выборку учителей, учащихся и премета
             return View(_subject.GetAll());
         }
 
-        [Authorize(Policy = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         public IActionResult StudyOfSub(int? id)
         {
-            ViewData["dep"] = id; //пересмотреть отправляемые данные
+            //ViewData["dep"] = id; //пересмотреть отправляемые данные
             return View(_profile.GetAll());
         }
 
         [HttpGet]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateSub(int? id)
         {
             return View(_subject.GetAll());
         }
 
 
-        [Authorize(Policy = "Study")]
+        [Authorize(Roles = "Study")]
         public IActionResult Estimate()
         {
             // тут тоже пишится запрос с include учителей, учащихся и предмета
             return View(_estimate.GetAll());
         }
 
-        [Authorize(Policy = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateEst()
         {
             //аналогично прошлой ситуации
@@ -72,7 +73,7 @@ namespace TeacherOnline.Controllers
 
 
         //а чё это нужно? и в пост методах так же.. странно
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteEst(int id)
         {
             _estimate.Delete(id);
@@ -83,7 +84,7 @@ namespace TeacherOnline.Controllers
         //Method Post
 
 
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IResult CreateSub(Subject sub)
         {
@@ -91,7 +92,7 @@ namespace TeacherOnline.Controllers
             return Results.Redirect("Subject");
         }
 
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult DeleteSub(int id)
         {
@@ -99,7 +100,7 @@ namespace TeacherOnline.Controllers
             return Ok();
         }
 
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult UpdateSub(Subject dep)
         {

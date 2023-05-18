@@ -9,14 +9,14 @@
         {
             if(item.Id.ToString() == ViewData["idsub"]?.ToString())
             {
-                <label class="form-label">Название отдела</label>
+                <label class="form-label">Название предмета</label>
                 <input type="text" class="form-control" value="@item.Name" name="Name">
-                <label class="form-label">Босс</label>
-                <input readonly type="text" id="disableInput" class="form-control" name="IdTeacher" value="@item.IdTeacher"> @*тут нужно сделать выбор учителя *@
-                <label class="form-label">Об отделе</label>
+                <label class="form-label">Кто ведёт</label>
+                <input readonly type="text" id="disableInput" class="form-control" name="IdTeacher" value="@item.IdTeacherNavigation.LastName @item.IdTeacherNavigation.FirstName @item.IdTeacherNavigation.Otchestvo"> @*тут нужно сделать выбор учителя *@
+                <label class="form-label">О предмете</label>
                 <input type="text" class="form-control" name="About" value="@item.About">         
             }
         }
     </div>
-    <button type="submit" class="btn btn-primary">Создать пользователя</button>
+    <button type="submit" class="btn btn-primary">Создать предмет</button>
 </form>

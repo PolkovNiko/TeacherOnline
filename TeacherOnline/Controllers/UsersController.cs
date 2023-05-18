@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Authorization;
 using TeacherOnline.BLL.Services;
 using TeacherOnline.Models;
 using TeacherOnline.DAL.Entities;
+using TeacherOnline.BLL.Interfaces;
+using System.Security.Claims;
 
 namespace TeacherOnline.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        UserService _user;
-        ProfileService _profile;
-        AuthService _auth;
+        IUser _user;
+        IProfile _profile;
+        IAuth _auth;
 
-        public UsersController(ILogger<HomeController> logger, UserService user, ProfileService profile, AuthService auth)
+        public UsersController(ILogger<HomeController> logger, IUser user, IProfile profile, IAuth auth)
         {
             _logger = logger;
             _user = user;
@@ -33,23 +35,23 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Registration()
         {
             return View();
         }
 
         [HttpGet]
-        [Authorize(Policy = "Study")] //тут же добавиться только авторизированным пользователям
+        [Authorize(Roles = "Study, Teacher")] //тут же добавиться только авторизированным пользователям
         public  IActionResult UserProfile()
         {
-            var tempuser = _user.Get(Convert.ToInt32(HttpContext.Request.Cookies["Id"]));
+            var tempuser = _profile.Get((int)HttpContext.Session.GetInt32("Id"));
             if (tempuser is null) return RedirectToAction("CreateProfile");
             return View(tempuser);
         }
 
         [HttpGet]
-        [Authorize(Policy = "Study")]
+        [Authorize(Roles = "Study, Teacher")]
         public IActionResult CreateProfile()
         {
             Profile st = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
@@ -63,7 +65,7 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateUser(int id)
         {
             var tempuser = _user.Get(id);
@@ -73,10 +75,11 @@ namespace TeacherOnline.Controllers
         //Method Post
 
         [HttpPost]
-        public async Task<IResult> Autorization(User users, string? returnUrl)
+        public async Task<IResult> Autorization(User users)
         {
             await HttpContext.SignInAsync(_auth.LogIn(users));
-            return Results.Redirect(returnUrl);
+            HttpContext.Session.SetInt32("Id", _auth.Id);
+            return Results.Redirect("/");
         }
 
         [HttpPost]
@@ -89,7 +92,20 @@ namespace TeacherOnline.Controllers
         [HttpPost]
         public IActionResult UpdateProfile(Profile newProfile)
         {
-            _profile.Update(newProfile, null);
+            newProfile.Id = (int)HttpContext.Session.GetInt32("Id");
+            if (HttpContext.Request.Form.Files.Count == 0)
+                _profile.Update(newProfile, null);
+            else 
+            {
+                var files = HttpContext.Request.Form.Files.FirstOrDefault();
+                if (files != null)
+                {
+                    using (var stream = files.OpenReadStream())
+                    {
+                        _profile.Create(newProfile, stream);
+                    }
+                }
+            } 
             //естественно перепревкой на обработку делать валидацию.... или это на блл сделать!!??!??!?!
             return RedirectToAction("Index", "Home");
         }

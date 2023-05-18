@@ -1,22 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Изменить";
+    ViewData["Title"] = "Создать";
 
     //public record class Teach(int id, string fio);
     //static List<Teach> teahc { get; } = new List<Teach>();
     //foreach(var item in )
     //SelectList selects = new SelectList()
 }
-@model Praktika.Models.tempSub
+@model TeacherOnline.DAL.Entities.Subject;
 <h2>@ViewData["Title"]</h2>
 
 <form asp-controller="Subject" asp-action="CreateSub" method="post">
     <div class="mb-3">
-        <label class="form-label">Название отдела</label>
+        <label class="form-label">Название предмета</label>
         <input type="text" class="form-control" asp-for="@Model.Name">
-        <label class="form-label">Преподаватель</label>
-        <select class="form-control" asp-for="@Model.IdTeacher" asp-items="Model.Teachers"></select>
-        <label class="form-label">Об отделе</label>
+        @*<label class="form-label">Преподаватель основной</label>
+        <select class="form-control" asp-for="@Model.IdTeacher" asp-items="Model.Teachers"></select>*@
+        @*<label class="form-label">Преподаватель на практические занятия</label>
+        <select class="form-control" asp-for="@Model.IdTeacherPract" asp-items="Model.Teachers"></select>*@
+        <label class="form-label">О предмете</label>
         <input type="text" class="form-control" asp-for="@Model.About">
     </div>
-    <button type="submit" class="btn btn-primary">Создать пользователя</button>
+    <button type="submit" class="btn btn-primary">Создать предмет</button>
 </form>

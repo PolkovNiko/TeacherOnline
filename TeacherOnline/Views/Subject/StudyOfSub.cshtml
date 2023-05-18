@@ -2,13 +2,13 @@
     ViewData["Title"] = "Все сотрудники";
     int i = 0;
 }
-@model IEnumerable<Praktika.Models.Profile>
+@model IEnumerable<TeacherOnline.DAL.Entities.Profile>
 <h2>@ViewData["Title"]</h2>
 
 <!--тут цикл для всех пользователей -->
 @foreach(var item in Model)
 {
-    @*if(item.Department.ToString() == ViewData["dep"]?.ToString())
+    @*if(item..ToString() == ViewData["dep"]?.ToString())
     {
         i++;
         <div class="container g-5" style="margin-top: 20px; margin-left:-53px">
@@ -27,6 +27,7 @@
     {
         <h1>Сотрудников в данном отделе нет!!!</h1>
         <h1>Приходите завтра</h1>
+        return;
     }
 }
 

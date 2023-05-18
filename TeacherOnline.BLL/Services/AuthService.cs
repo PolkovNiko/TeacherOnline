@@ -8,6 +8,7 @@ namespace TeacherOnline.BLL.Services
     public class AuthService : IAuth
     {
         AssistantTeachingContext _context;
+        public int Id {get;set;}
 
         public AuthService(AssistantTeachingContext context) 
         { 
@@ -18,6 +19,7 @@ namespace TeacherOnline.BLL.Services
         {
             User? valid = _context.Users.FirstOrDefault(val => val.Login == user.Login && val.Password == user.Password);
             if (valid is null) throw new Exception("вы кто такие? я вас не звал. покиньте сайт!");   //тут вариант отдельный блок валидации написать, возможно в сервис и использовать здесь через DI
+            Id = valid.Id;
             var claims = new List<Claim> { new Claim(ClaimTypes.Role, valid.Rank) };
             var claimIdentitys = new ClaimsIdentity(claims, "Cookies");
             var claimPrincipal = new ClaimsPrincipal(claimIdentitys);

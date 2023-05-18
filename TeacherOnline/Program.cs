@@ -1,15 +1,21 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
 using TeacherOnline.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connection = builder.Configuration.GetConnectionString("DataBase");
+string? connection = builder.Configuration.GetConnectionString("DataBases");
 builder.Services.AddDbContext<AssistantTeachingContext>(option => option.UseSqlServer(connection));
-
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(cfg => { 
+    cfg.IdleTimeout = TimeSpan.FromSeconds(3600);
+    cfg.Cookie.Name = "TempSession";
+    cfg.Cookie.HttpOnly = true;
+});
 builder.Services.AddTransient<IAuth, AuthService>();
 builder.Services.AddTransient<IEstimate, EstimateService>();
 builder.Services.AddTransient<IFile, FileService>();
@@ -43,6 +49,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -50,9 +57,14 @@ app.UseAuthorization();
 app.MapGet("/logout", async (HttpContext context) =>
 {
     await context.SignOutAsync("Cookies");
-    if (context.Request.Cookies.ContainsKey("Id"))
+    //if (context.Request.Cookies.ContainsKey("Id"))
+    //{
+    //    context.Response.Cookies.Delete("Id");
+    //}
+    if(context.Features.Get<ISessionFeature>()?.Session != null)
     {
-        context.Response.Cookies.Delete("Id");
+        context.Session.Clear();
+        context.Response.Cookies.Delete("TempSession");
     }
     return Results.Redirect("/");
 });

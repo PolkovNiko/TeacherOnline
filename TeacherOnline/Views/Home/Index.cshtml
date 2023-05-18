@@ -1,10 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@*@model IEnumerable<Praktika.Models.User>*@
+@model IEnumerable<TeacherOnline.DAL.Entities.User>
 
     <h1>Дипломная работа</h1>
-    <h1>Пока так, придумать наполнение (приветствие)</h1>
+    <h1>Пока так, придумать наполнение (приветствие) @User.Identity.IsAuthenticated</h1>
 
 @*<p>
     <label>Аватар</label>
@@ -13,7 +13,7 @@
 <p>
     <input type="submit" value="Добавить" />
 </p>
-
+*@
 @if (User.Identity.IsAuthenticated && ViewData["rank"]?.ToString() == "Admin")
 {
     <p>
@@ -47,4 +47,4 @@
             }
         </tbody>
     </table>
-}*@
+}

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using TeacherOnline.BLL.Interfaces;
+﻿using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 
@@ -45,11 +44,12 @@ namespace TeacherOnline.BLL.Services
                 Profile.LastName = item.LastName;
                 Profile.FirstName = item.FirstName;
                 Profile.Otchestvo = item.Otchestvo;
-                Profile.Group = item.Group;
+                Profile.Groups = item.Groups;
                 Profile.About = item.About;
                 Profile.Date = item.Date;
                 _context.Profiles.Update(Profile);
                 _context.SaveChanges();
+                return;
             }
             throw new Exception("Пользователь не найден!");
         }
@@ -64,19 +64,19 @@ namespace TeacherOnline.BLL.Services
             }
         }
 
-        public IEnumerable<Profile> Find(Func<Profile, bool> predicate)
+        public List<Profile> Find(Func<Profile, bool> predicate)
         {
-            return _context.Profiles.Where(predicate).AsEnumerable();
+            return _context.Profiles.Where(predicate).ToList();
         }
 
-        public IQueryable<Profile> Get(int id)
+        public List<Profile> Get(int id)
         {
-            return _context.Profiles.Where(u => u.Id == id).AsQueryable();
+            return _context.Profiles.Where(u => u.Id == id).ToList();
         }
 
-        public IEnumerable<Profile> GetAll()
+        public List<Profile> GetAll()
         {
-            return _context.Profiles.AsEnumerable();
+            return _context.Profiles.ToList();
         }
     }
 }

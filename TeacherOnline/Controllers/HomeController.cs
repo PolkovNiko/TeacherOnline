@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.Models;
 
@@ -9,11 +10,11 @@ namespace TeacherOnline.Controllers
 {
     public class HomeController : Controller
     {
-
+        IProfile _profile;
         
-        public HomeController()
+        public HomeController(IProfile profile)
         {
-
+            _profile = profile;
         }
 
         //-------------------------------------------------------------------------------------------
@@ -25,10 +26,10 @@ namespace TeacherOnline.Controllers
             return View();
         }
 
-        [Authorize(Policy = "Teacher")]
+        [Authorize(Roles = "Teacher, Admin")]
         public IActionResult Search()
         {
-            return View();
+            return View(_profile.GetAll());
         }
 
 

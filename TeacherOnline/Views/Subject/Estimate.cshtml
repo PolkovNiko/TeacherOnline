@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Отметки";
 }
-@model IEnumerable<Praktika.Models.Estimate>
+@model IEnumerable<TeacherOnline.DAL.Entities.Estimate>
 <h2>@ViewData["Title"]</h2>
 
 <a class="btn btn-success" asp-controller="Subject" asp-action="CreateEst">Добавить отметку<br /></a>
@@ -38,10 +38,12 @@
     <tbody>
         @foreach(var item in Model){
             <tr>
-                <th scope="row">@item.user.DataTextField</th>
-                <th>@item.subj.DataTextField</th>
+                <th scope="row">@item.IdUserNavigation.FirstName @item.IdUserNavigation.LastName @item.IdUserNavigation.Otchestvo</th>
+                <th>@item.IdSubjectNavigation.Name</th>
                 <th>@item.Score</th>
-                <th>@item.teach.DataTextField</th>
+                <th>@item.IdTeacherNavigation.FirstName @item.IdTeacherNavigation.LastName @item.IdTeacherNavigation.Otchestvo</th>
+
+                @*подумать над возможностью изменить отметку и её удалить...*@
                 @if(User.IsInRole("Teacher"))
                 {
                     <td>
