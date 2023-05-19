@@ -25,7 +25,6 @@ namespace TeacherOnline.BLL.Services
             {
                 User.Login = item.Login;
                 User.Password = item.Password;
-                User.Rank = item.Rank;
                 User.Email = item.Email;
                 _context.Users.Update(User);
                 _context.SaveChanges();

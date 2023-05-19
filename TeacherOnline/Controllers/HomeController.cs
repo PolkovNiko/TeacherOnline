@@ -11,10 +11,12 @@ namespace TeacherOnline.Controllers
     public class HomeController : Controller
     {
         IProfile _profile;
+        IUser _user;
         
-        public HomeController(IProfile profile)
+        public HomeController(IProfile profile, IUser user)
         {
             _profile = profile;
+            _user = user;
         }
 
         //-------------------------------------------------------------------------------------------
@@ -23,7 +25,7 @@ namespace TeacherOnline.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(_user.GetAll());
         }
 
         [Authorize(Roles = "Teacher, Admin")]
