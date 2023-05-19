@@ -95,17 +95,18 @@ namespace TeacherOnline.Controllers
         [HttpPost]
         public IActionResult CreateUser(User user)
         {
-            user.Id = (int)HttpContext.Session.GetInt32("Id");
+            //var index = _user.GetAll();
+            //user.Id = index.Count() == 0 ? 1 : index.Count() + 1;
             _user.Create(user);
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public IActionResult UpdateProfile(Profile newProfile)
+        public IActionResult UpdateProfile(UserProfileVM newProfile)
         {
-            newProfile.Id = (int)HttpContext.Session.GetInt32("Id");
+            newProfile.Profile.Id = (int)HttpContext.Session.GetInt32("Id");
             if (HttpContext.Request.Form.Files.Count == 0)
-                _profile.Update(newProfile, null);
+                _profile.Update(newProfile.Profile, null);
             else 
             {
                 var files = HttpContext.Request.Form.Files.FirstOrDefault();
@@ -113,7 +114,7 @@ namespace TeacherOnline.Controllers
                 {
                     using (var stream = files.OpenReadStream())
                     {
-                        _profile.Create(newProfile, stream);
+                        _profile.Create(newProfile.Profile, stream);
                     }
                 }
             } 
@@ -133,7 +134,7 @@ namespace TeacherOnline.Controllers
                     _profile.Create(_convert.ConvetToProfile(newProfile), stream);
                 }
             }
-            return RedirectToAction("Search", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

@@ -39,27 +39,32 @@
 <form class="row g-3" style="width:1000px" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" name="LastName">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" name="FirstName">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" asp-for="@Model.Profile.FirstName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Отчетсво</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" name="Otchestvo">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" asp-for="@Model.Profile.Otchestvo">
         </div>
         <div class="col-md-3">
             <label for="inputDataHB" class="form-label">День рождения</label>
-            <input type="date" class="form-control" id="inputDataHB" value="@date" name="Date">
+            <input type="date" class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
         </div>
-        @if (User.IsInRole("Teacher"))
+        @if (!User.IsInRole("Teacher"))
         {
             <div class="col-md-3">
                 <label for="inputDepartment" class="form-label">Группа</label>
                 <select class="form-select" asp-for="@Model.Profile.Groups">
                     @foreach (var item in Model.Group)
                     {
+                        @if(Model.Profile.Groups == item.Id)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                            continue;
+                        }
                         <option value="@item.Id">@item.Name</option>
                     }
                 </select>
@@ -67,12 +72,12 @@
         }
         <div class="col-md-3">
             <label for="inputNumber" class="form-label">О себе</label>
-            <input type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" name="About">
+            <input type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" asp-for="@Model.Profile.About">
         </div>
         <div class="row">
             <div class="col-md-5">
                 <label for="formFile" class="form-label">Загрузить фото</label>
-                <input class="form-control" type="file" id="formFile" name="Photos">
+                <input class="form-control" type="file" id="formFile" asp-for="@Model.Profile.Photo">
                 <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
             </div>
         </div>
