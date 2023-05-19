@@ -9,4 +9,6 @@ public partial class Group
     public string Specialty { get; set; } = null!;
 
     public virtual ICollection<GroupsInSub> GroupsInSubs { get; set; } = new List<GroupsInSub>();
+
+    public virtual ICollection<Profile> Profiles { get; set; } = new List<Profile>();
 }

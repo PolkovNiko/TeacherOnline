@@ -90,11 +90,15 @@ public partial class AssistantTeachingContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.Groups).HasMaxLength(5);
+
+            entity.HasOne(d => d.GroupsNavigation).WithMany(p => p.Profiles)
+                .HasForeignKey(d => d.Groups)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Profile_Groups");
 
             entity.HasOne(d => d.IdNavigation).WithOne(p => p.Profile)
                 .HasForeignKey<Profile>(d => d.Id)
-                .HasConstraintName("FK_Profile_ToUsers");
+                .HasConstraintName("FK_Profile_Users");
         });
 
         modelBuilder.Entity<Subject>(entity =>

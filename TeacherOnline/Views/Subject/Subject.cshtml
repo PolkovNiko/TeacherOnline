@@ -4,9 +4,9 @@
 @model IEnumerable<TeacherOnline.DAL.Entities.Subject>
 <h2>@ViewData["Title"]</h2>
 @if (User.IsInRole("Teacher"))
-}
-    <a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
 {
+    <a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
+}
     @*идея: эту страницу сделать доступной для преподавателя и учащегося, а для учащегося сделать возможность просмотр отметок по предмету
         но тогда зачем страница с отметками.....
     *@

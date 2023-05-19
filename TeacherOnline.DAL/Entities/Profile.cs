@@ -12,7 +12,7 @@ public partial class Profile
 
     public DateTime Date { get; set; }
 
-    public string? Groups { get; set; }
+    public int? Groups { get; set; }
 
     public byte[] Photo { get; set; } = null!;
 
@@ -23,6 +23,8 @@ public partial class Profile
     public virtual ICollection<Estimate> EstimateIdUserNavigations { get; set; } = new List<Estimate>();
 
     public virtual ICollection<File> Files { get; set; } = new List<File>();
+
+    public virtual Group? GroupsNavigation { get; set; }
 
     public virtual User IdNavigation { get; set; } = null!;
 

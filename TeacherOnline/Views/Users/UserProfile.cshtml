@@ -1,34 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Профиль";
 }
-
+@using TeacherOnline.DTO.ViewModel;
 @{
     string x, y;
     string date = "";
-    foreach(var item in Model)
+    if (Model.Profile.Date.Month < 10) 
+    @*вот тут ошибка, возвращает нул, хотя должна быть дата.... писец*@
     {
-        if (item.Date.Month < 10) 
-        @*вот тут ошибка, возвращает нул, хотя должна быть дата.... писец*@
+        x = "0" + Model.Profile.Date.Month;
+        if (Model.Profile.Date.Day < 10)
         {
-            x = "0" + item.Date.Month;
-            if (item.Date.Day < 10)
-            {
-                y = "0" + item.Date.Day;
-                date = item.Date.Year + "-" + x + "-" + y;
-            }
-            else
-            { date = item.Date.Year + "-" + x + "-" + item.Date.Day; }
+            y = "0" + Model.Profile.Date.Day;
+            date = Model.Profile.Date.Year + "-" + x + "-" + y;
+        }
+        else
+        { date = Model.Profile.Date.Year + "-" + x + "-" + Model.Profile.Date.Day; }
 
-        }
-        else if(item.Date.Day < 10)
-        {
-            y = "0" + item.Date.Day;
-            date = item.Date.Year + "-" + item.Date.Month + "-" + y;
-        }
+    }
+    else if (Model.Profile.Date.Day < 10)
+    {
+        y = "0" + Model.Profile.Date.Day;
+        date = Model.Profile.Date.Year + "-" + Model.Profile.Date.Month + "-" + y;
     }
 }
 
-@model List<TeacherOnline.DAL.Entities.Profile>
+@model UserProfileVM;
 
     
 
@@ -40,45 +37,46 @@
 снизу - пример на создание профайла для пользователя админом.... просто пусть будет
 -->
 <form class="row g-3" style="width:1000px" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
-@*    <div class="col-md-2">
-        <label for="inputEmail4" class="form-label">ID</label>
-        <input readonly type="number" class="form-control" id="inputID" name="Id" value="@Model.Id">
-    </div> перед удалением затестить: а что если id не передаётся с отправкой и получится ошибка!?!?!?!*@
-    @foreach(var item in Model)
-    {
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@item.LastName" name="LastName">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" name="LastName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@item.FirstName" name="FirstName">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" name="FirstName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Отчетсво</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@item.Otchestvo" name="Otchestvo">
+            <input type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" name="Otchestvo">
         </div>
         <div class="col-md-3">
             <label for="inputDataHB" class="form-label">День рождения</label>
             <input type="date" class="form-control" id="inputDataHB" value="@date" name="Date">
         </div>
-        <div class="col-md-3">
-            <label for="inputDepartment" class="form-label">Группа</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="П-1" value="@item.Groups" name="Group">
-        </div>
+        @if (User.IsInRole("Teacher"))
+        {
+            <div class="col-md-3">
+                <label for="inputDepartment" class="form-label">Группа</label>
+                <select class="form-select" asp-for="@Model.Profile.Groups">
+                    @foreach (var item in Model.Group)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+        }
         <div class="col-md-3">
             <label for="inputNumber" class="form-label">О себе</label>
-            <input type="text" class="form-control" id="inputNumber" value="@item.About" name="About">
+            <input type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" name="About">
         </div>
         <div class="row">
             <div class="col-md-5">
                 <label for="formFile" class="form-label">Загрузить фото</label>
                 <input class="form-control" type="file" id="formFile" name="Photos">
-                <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Photo))" />
+                <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
             </div>
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Сохранить данные</button>
         </div>
-    }
 </form>

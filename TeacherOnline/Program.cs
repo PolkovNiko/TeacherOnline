@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
 using TeacherOnline.DAL;
+using TeacherOnline.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddTransient<IGroup, GroupService>();
 builder.Services.AddTransient<IProfile, ProfileService>();
 builder.Services.AddTransient<ISubject, SubjectService>();
 builder.Services.AddTransient<IUser, UserService>();
+builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
+builder.Services.AddTransient<IConvertModels, ConvertService>();
 
 // Add services to the container.
 builder.Services.AddAuthentication("Cookies")

@@ -1,4 +1,5 @@
-﻿using TeacherOnline.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 
@@ -24,6 +25,7 @@ namespace TeacherOnline.BLL.Services
                 }
                 _context.Profiles.Add(item);
                 _context.SaveChanges();
+                return;
             }
             throw new Exception("Вы не прикрепили Фото");
         }
@@ -66,17 +68,17 @@ namespace TeacherOnline.BLL.Services
 
         public List<Profile> Find(Func<Profile, bool> predicate)
         {
-            return _context.Profiles.Where(predicate).ToList();
+            return _context.Profiles.Include(u => u.GroupsNavigation).Where(predicate).ToList();
         }
 
-        public List<Profile> Get(int id)
+        public Profile Get(int id)
         {
-            return _context.Profiles.Where(u => u.Id == id).ToList();
+            return _context.Profiles.FirstOrDefault(u => u.Id == id);
         }
 
         public List<Profile> GetAll()
         {
-            return _context.Profiles.ToList();
+            return _context.Profiles.Include(u => u.GroupsNavigation).ToList();
         }
     }
 }

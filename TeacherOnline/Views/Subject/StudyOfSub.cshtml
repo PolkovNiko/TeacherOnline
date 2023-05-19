@@ -8,7 +8,7 @@
 <!--тут цикл для всех пользователей -->
 @foreach(var item in Model)
 {
-    @*if(item..ToString() == ViewData["dep"]?.ToString())
+    @*if(item. == ViewData["dep"]?.ToString())
     {
         i++;
         <div class="container g-5" style="margin-top: 20px; margin-left:-53px">
@@ -16,8 +16,8 @@
                 <div class="card" style="width: 11.25rem;">
                     <img src="data:image/jpeg;base64,@(Convert.ToBase64String(item.Photo))" class="card-img-top" style="width:200px; height:200px;">
                   <div class="card-body">
-                    <h5 class="card-title">@item.Fio</h5>
-                    <p class="card-text">номер телефона: @item.Number </p>
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">номер телефона:  </p>
                   </div>
                 </div>
             </div>
@@ -31,8 +31,3 @@
     }
 }
 
-
-@*@foreach(var item in Staff)
-{
-    
-}*@

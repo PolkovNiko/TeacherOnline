@@ -34,7 +34,7 @@ namespace TeacherOnline.Controllers
             return View(_subject.GetAll());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Teacher")]
         public IActionResult CreateSub()
         {
             //ViewData["Id"] = HttpContext.Request.Cookies["Id"]; //пересмотреть отправляемые данные

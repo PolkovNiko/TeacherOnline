@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ModelsDTO\" />
+    <ProjectReference Include="..\TeacherOnline.DAL\TeacherOnline.DAL.csproj" />
   </ItemGroup>
 
 </Project>

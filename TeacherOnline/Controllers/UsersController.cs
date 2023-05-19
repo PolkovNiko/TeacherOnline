@@ -2,11 +2,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using TeacherOnline.BLL.Services;
 using TeacherOnline.Models;
 using TeacherOnline.DAL.Entities;
 using TeacherOnline.BLL.Interfaces;
-using System.Security.Claims;
+using TeacherOnline.DTO.ModelsDTO;
+using TeacherOnline.DTO.ViewModel;
+using TeacherOnline.DTO;
 
 namespace TeacherOnline.Controllers
 {
@@ -16,13 +17,17 @@ namespace TeacherOnline.Controllers
         IUser _user;
         IProfile _profile;
         IAuth _auth;
+        IGroup _group;
+        IConvertModels _convert;
 
-        public UsersController(ILogger<HomeController> logger, IUser user, IProfile profile, IAuth auth)
+        public UsersController(ILogger<HomeController> logger, IUser user, IProfile profile, IAuth auth, IGroup group, IConvertModels convert)
         {
             _logger = logger;
             _user = user;
             _profile = profile;
             _auth = auth;
+            _group = group;
+            _convert = convert;
         }
 
         //-------------------------------------------------------------------------------------------
@@ -45,9 +50,11 @@ namespace TeacherOnline.Controllers
         [Authorize(Roles = "Study, Teacher")] //тут же добавиться только авторизированным пользователям
         public  IActionResult UserProfile()
         {
-            var tempuser = _profile.Get((int)HttpContext.Session.GetInt32("Id"));
-            if (tempuser is null) return RedirectToAction("CreateProfile");
-            return View(tempuser);
+            UserProfileVM vm = new UserProfileVM();
+            vm.Group = _group.GetAll();
+            vm.Profile = _profile.Get((int)HttpContext.Session.GetInt32("Id"));
+            if (vm.Profile is null) return RedirectToAction("CreateProfile");
+            return View(vm);
         }
 
         [HttpGet]
@@ -55,7 +62,10 @@ namespace TeacherOnline.Controllers
         public IActionResult CreateProfile()
         {
             Profile st = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
-            return View(st);
+            UserProfileVM vm = new UserProfileVM();
+            vm.Group = _group.GetAll();
+            vm.Profile = st;
+            return View(vm);
         }
 
         [HttpGet]
@@ -85,6 +95,7 @@ namespace TeacherOnline.Controllers
         [HttpPost]
         public IActionResult CreateUser(User user)
         {
+            user.Id = (int)HttpContext.Session.GetInt32("Id");
             _user.Create(user);
             return RedirectToAction("Index", "Home");
         }
@@ -111,22 +122,18 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProfile(Profile newProfile)
+        public IActionResult CreateProfile(UserProfileVM newProfile)
         {
-            if (newProfile.Id == Convert.ToInt32(HttpContext.Request.Cookies["Id"]))
+            newProfile.Profile.Id = (int)HttpContext.Session.GetInt32("Id");
+            var files = HttpContext.Request.Form.Files.FirstOrDefault();
+            if(files != null)
             {
-                var files = HttpContext.Request.Form.Files.FirstOrDefault();
-                if(files != null)
+                using(var stream = files.OpenReadStream())
                 {
-                    using(var stream = files.OpenReadStream())
-                    {
-                        _profile.Create(newProfile, stream);
-                    }
+                    _profile.Create(_convert.ConvetToProfile(newProfile), stream);
                 }
-                //_profile.Create(newProfile);
-                return RedirectToAction("Search", "Home");
             }
-            throw new Exception("айди не совпадает с юзерским айди");
+            return RedirectToAction("Search", "Home");
         }
 
         [HttpPost]
