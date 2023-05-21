@@ -63,12 +63,14 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Profiles.Remove(Profile);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("profile is not found?");
         }
 
-        public List<Profile> Find(Func<Profile, bool> predicate)
+        public IEnumerable<Profile> Find(Func<Profile, bool> predicate)
         {
-            return _context.Profiles.Include(u => u.GroupsNavigation).Where(predicate).ToList();
+            return _context.Profiles.Include(u => u.IdNavigation).Include(u=> u.GroupsNavigation).Where(predicate);
         }
 
         public Profile Get(int id)
@@ -76,9 +78,9 @@ namespace TeacherOnline.BLL.Services
             return _context.Profiles.FirstOrDefault(u => u.Id == id);
         }
 
-        public List<Profile> GetAll()
+        public IEnumerable<Profile> GetAll()
         {
-            return _context.Profiles.Include(u => u.GroupsNavigation).ToList();
+            return _context.Profiles.Include(u=>u.GroupsNavigation);
         }
     }
 }

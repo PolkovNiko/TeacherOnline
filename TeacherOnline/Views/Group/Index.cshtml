@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Группы";
+}
+@model TeacherOnline.DTO.ViewModel.GroupInSubVM;
+
+    <h1>Группы</h1>
+@if (User.IsInRole("Teacher"))
+{
+    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroup">Создать группу<br /></a>
+}
+
+<p>
+    Список пользователей
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Группа</th>
+            <th scope="col">Специальность</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.groups)
+        {
+            <tr>
+                <th scope="row">@item.Name</th>
+                <td>@item.Specialty</td>
+                <td><a class="btn btn-warning" asp-controller="Group" asp-action="UpdateGroup" asp-route-id="@item.Id">Изменить</a></td>
+                <td>
+                    <form method="post" asp-controller="Group" asp-action="DeleteGroup" asp-route-id="@item.Id">
+                        <button class="btn btn-danger" type="submit">Удалить</button>
+                </form> </td> 
+            </tr>
+        }
+    </tbody>
+</table>

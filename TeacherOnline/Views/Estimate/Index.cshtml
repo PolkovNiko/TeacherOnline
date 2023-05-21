@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Отметки";
+}
+@functions{
+    public string fioUser(TeacherOnline.DAL.Entities.Estimate estimate)
+    {
+        string fioUser = $"{estimate.IdUserNavigation.LastName} {estimate.IdUserNavigation.FirstName[0]}. {estimate.IdUserNavigation.Otchestvo[0]}.";
+        return fioUser;
+    }
+    public string fioTeacher(TeacherOnline.DAL.Entities.Estimate estimate)
+    {
+        string fioTeacher = $"{estimate.IdTeacherNavigation.LastName} {estimate.IdTeacherNavigation.FirstName[0]}. {estimate.IdTeacherNavigation.Otchestvo[0]}.";
+        return fioTeacher;
+    }
+}
+@model TeacherOnline.DTO.ViewModel.EstimateVM;
+
+    <h1>Группы</h1>
+@if (User.IsInRole("Teacher"))
+{
+    <a class="btn btn-success" asp-controller="Estimate" asp-action="CreateEstimate">Создать группу<br /></a>
+}
+
+<p>
+    Отметки
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Предмет</th>
+            <th scope="col">Учащийся</th>
+            <th scope="col">Отметка</th>
+            <th scope="col">Преподаватель</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.estimateList)
+        {
+            <tr>
+                <th scope="row">@item.IdSubjectNavigation.Name</th>
+                <td>@fioUser(item)</td>
+                <td>@item.Score</td>
+                <td>@fioTeacher(item)</td>
+@*                @if(item.IdTeacher == (int)ViewData["Id"])
+                {*@
+                <td><a class="btn btn-warning" asp-controller="Estimate" asp-action="UpdateEstimate" asp-route-id="@item.Id">Изменить</a></td>
+                <td>
+                    <form method="post" asp-controller="Estimate" asp-action="DeleteEstimate" asp-route-id="@item.Id">
+                        <button class="btn btn-danger" type="submit">Удалить</button> </form> 
+                </td> 
+                }
+            </tr>
+        }
+    </tbody>
+</table>

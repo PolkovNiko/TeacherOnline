@@ -16,6 +16,8 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(File item)
         {
+            var count = GetAll().Count();
+            item.Id = count == 0 ? 1 : count + 1;
             _context.Files.Add(item);
             _context.SaveChanges();
         }
@@ -28,7 +30,9 @@ namespace TeacherOnline.BLL.Services
                 File.Path = item.Path;
                 _context.Files.Update(File);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("fileS is not found?");
         }
 
         public void Delete(int id)
@@ -38,22 +42,24 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Files.Remove(File);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("fileS is not found?");
         }
 
         public IEnumerable<File> Find(Func<File, bool> predicate)
         {
-            return _context.Files.Where(predicate).AsEnumerable();
+            return _context.Files.Where(predicate);
         }
 
-        public IQueryable<File> Get(int id)
+        public File Get(int id)
         {
-            return _context.Files.Where(u => u.Id == id).AsQueryable();
+            return _context.Files.FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<File> GetAll()
         {
-            return _context.Files.AsEnumerable();
+            return _context.Files;
         }
     }
 }

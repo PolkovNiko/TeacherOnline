@@ -61,10 +61,10 @@ namespace TeacherOnline.Controllers
         [Authorize(Roles = "Study, Teacher")]
         public IActionResult CreateProfile()
         {
-            Profile st = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
+            //Profile st = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
             UserProfileVM vm = new UserProfileVM();
             vm.Group = _group.GetAll();
-            vm.Profile = st;
+            //vm.Profile = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
             return View(vm);
         }
 
@@ -97,7 +97,37 @@ namespace TeacherOnline.Controllers
         {
             //var index = _user.GetAll();
             //user.Id = index.Count() == 0 ? 1 : index.Count() + 1;
+
             _user.Create(user);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUser(User newUser)
+        {
+            _user.Update(newUser);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteUser(int id)
+        {
+            _user.Delete(id);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult CreateProfile(UserProfileVM newProfile)
+        {
+            newProfile.Profile.Id = (int)HttpContext.Session.GetInt32("Id");
+            var files = HttpContext.Request.Form.Files.FirstOrDefault();
+            if(files != null)
+            {
+                using(var stream = files.OpenReadStream())
+                {
+                    _profile.Create(_convert.ConvetToProfile(newProfile), stream);
+                }
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -119,35 +149,6 @@ namespace TeacherOnline.Controllers
                 }
             } 
             //естественно перепревкой на обработку делать валидацию.... или это на блл сделать!!??!??!?!
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult CreateProfile(UserProfileVM newProfile)
-        {
-            newProfile.Profile.Id = (int)HttpContext.Session.GetInt32("Id");
-            var files = HttpContext.Request.Form.Files.FirstOrDefault();
-            if(files != null)
-            {
-                using(var stream = files.OpenReadStream())
-                {
-                    _profile.Create(_convert.ConvetToProfile(newProfile), stream);
-                }
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult UpdateUser(User newUser)
-        {
-            _user.Update(newUser);
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult DeleteUser(int id)
-        {
-            _user.Delete(id);
             return RedirectToAction("Index", "Home");
         }
 

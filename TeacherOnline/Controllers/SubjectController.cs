@@ -5,6 +5,7 @@ using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
+using TeacherOnline.DTO.ViewModel;
 using TeacherOnline.Models;
 
 namespace TeacherOnline.Controllers
@@ -14,13 +15,15 @@ namespace TeacherOnline.Controllers
         ISubject _subject;
         IProfile _profile;
         IEstimate _estimate;
+        IUser _user;
 
 
-        public SubjectController(ISubject subject, IProfile profile, IEstimate estimate) 
+        public SubjectController(ISubject subject, IProfile profile, IEstimate estimate, IUser user) 
         { 
             _subject = subject;
             _profile = profile;
             _estimate = estimate;
+            _user = user;
         }
 
 
@@ -37,27 +40,30 @@ namespace TeacherOnline.Controllers
         [Authorize(Roles = "Teacher")]
         public IActionResult CreateSub()
         {
-            //ViewData["Id"] = HttpContext.Request.Cookies["Id"]; //пересмотреть отправляемые данные
-            //тут через include нужно реализовать выборку учителей, учащихся и премета
-            return View(_subject.GetAll());
+            SubjectGroupTeacherVM vm = new SubjectGroupTeacherVM();
+            vm.teacher = _profile.Find(x => x.IdNavigation.Rank == "Teacher" && x.Id != HttpContext.Session.GetInt32("Id"));
+            return View(vm);
         }
 
         [Authorize(Roles = "Teacher")]
-        public IActionResult StudyOfSub(int? id)
+        public IActionResult StudyOfSub(int id)
         {
             //ViewData["dep"] = id; //пересмотреть отправляемые данные
             return View(_profile.GetAll());
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult UpdateSub(int? id)
+        [Authorize(Roles = "Teacher")]
+        public IActionResult UpdateSub(int id)
         {
-            return View(_subject.GetAll());
+            SubjectGroupTeacherVM vm = new SubjectGroupTeacherVM();
+            vm.teacher = _profile.Find(x => x.IdNavigation.Rank == "Teacher" && x.Id != HttpContext.Session.GetInt32("Id"));
+            vm.sub = _subject.Get(id);
+            return View(vm);
         }
 
 
-        [Authorize(Roles = "Study")]
+        [Authorize(Roles = "Study, Teacher")]
         public IActionResult Estimate()
         {
             // тут тоже пишится запрос с include учителей, учащихся и предмета
@@ -73,39 +79,44 @@ namespace TeacherOnline.Controllers
 
 
         //а чё это нужно? и в пост методах так же.. странно
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Teacher")]
         public IActionResult DeleteEst(int id)
         {
             _estimate.Delete(id);
             return RedirectToAction("Subject");
         }
 
+        public IActionResult GroupInSub()
+        {
+            return RedirectToAction("GroupInSub", "Group");
+        }
         //-------------------------------------------------------------------------------------------
         //Method Post
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public IResult CreateSub(Subject sub)
         {
+            sub.IdTeacher = (int)HttpContext.Session.GetInt32("Id");
             _subject.Create(sub);
             return Results.Redirect("Subject");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public IActionResult DeleteSub(int id)
         {
             _subject.Delete(id);
-            return Ok();
+            return RedirectToAction("Subject");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
-        public IActionResult UpdateSub(Subject dep)
+        public IActionResult UpdateSub(SubjectGroupTeacherVM dep)
         {
-            _subject.Update(dep);
-            return Ok();
+            _subject.Update(dep.sub);
+            return RedirectToAction("Subject");
         }
 
         //-------------------------------------------------------------------------------------------

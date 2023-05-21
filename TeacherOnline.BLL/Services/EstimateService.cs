@@ -16,9 +16,12 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(Estimate item)
         {
+            //var count = GetAll().Count();
+            //item.Id = count == 0 ? 1 : count + 1;
             _context.Estimates.Add(item);
             _context.SaveChanges();
         }
+
         public void Update(Estimate item)
         {
             var estimate = _context.Estimates.FirstOrDefault(u=> u.Id == item.Id);
@@ -30,7 +33,9 @@ namespace TeacherOnline.BLL.Services
                 estimate.Score = item.Score;
                 _context.Estimates.Update(estimate);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("estimates is not found?");
         }
 
         public void Delete(int id)
@@ -40,22 +45,24 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Estimates.Remove(estimates);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("estimates is not found?");
         }
 
         public IEnumerable<Estimate> Find(Func<Estimate, bool> predicate)
         {
-            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).Where(predicate).AsEnumerable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).Where(predicate);
         }
 
-        public IQueryable<Estimate> Get(int id)
+        public Estimate Get(int id)
         {
-            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).Where(u => u.Id == id).AsQueryable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<Estimate> GetAll()
         {
-            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation).AsEnumerable();
+            return _context.Estimates.Include(u => u.IdUserNavigation).Include(u => u.IdTeacherNavigation).Include(u => u.IdSubjectNavigation);
         }
 
     }

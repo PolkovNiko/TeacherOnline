@@ -8,7 +8,7 @@ namespace TeacherOnline.BLL.Interfaces
         void Delete(int id);
         void Update(Estimate item);
         IEnumerable<Estimate> GetAll();
-        IQueryable<Estimate> Get(int id);
+        Estimate Get(int id);
         IEnumerable<Estimate> Find(Func<Estimate, bool> predicate);
     }
 }

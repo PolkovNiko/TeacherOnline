@@ -1,22 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Изменить";
 }
-@model IEnumerable<TeacherOnline.DAL.Entities.Subject>
+@model TeacherOnline.DTO.ViewModel.SubjectGroupTeacherVM;
 
 <form asp-controller="Subject" asp-action="UpdateSub" method="post">
     <div class="mb-3">
-        @foreach(var item in Model)
-        {
-            if(item.Id.ToString() == ViewData["idsub"]?.ToString())
-            {
-                <label class="form-label">Название предмета</label>
-                <input type="text" class="form-control" value="@item.Name" name="Name">
-                <label class="form-label">Кто ведёт</label>
-                <input readonly type="text" id="disableInput" class="form-control" name="IdTeacher" value="@item.IdTeacherNavigation.LastName @item.IdTeacherNavigation.FirstName @item.IdTeacherNavigation.Otchestvo"> @*тут нужно сделать выбор учителя *@
-                <label class="form-label">О предмете</label>
-                <input type="text" class="form-control" name="About" value="@item.About">         
-            }
-        }
+        <input readonly hidden type="number" class="form-control" value="@Model.sub.Id" asp-for="@Model.sub.Id">
+        <label class="form-label">Название предмета</label>
+        <input type="text" class="form-control" value="@Model.sub.Name" asp-for="@Model.sub.Name">
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Группа</label>
+            <select class="form-select" asp-for="@Model.sub.IdTeacterPract">
+                @foreach (var item in Model.teacher)
+                {
+                    <option value="@item.Id">@item.FirstName @item.LastName @item.Otchestvo</option>
+                }
+            </select>
+        </div>
+        <label class="form-label">Номер подгруппы для доп. преподавателя</label>
+        <input type="range" class="form-range" min="0" max="1" value="@Model.sub.PartGroup" asp-for="@Model.sub.PartGroup">
+        <label class="form-label">О предмете</label>
+        <input type="text" class="form-control" value="@Model.sub.About" asp-for="@Model.sub.About">
     </div>
     <button type="submit" class="btn btn-primary">Создать предмет</button>
 </form>

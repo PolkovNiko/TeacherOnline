@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Группы в предметах";
+}
+@model TeacherOnline.DTO.ViewModel.GroupInSubVM;
+<h2>@ViewData["Title"]</h2>
+@if (User.IsInRole("Teacher"))
+{
+    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroupInSub">Создать ассоциацию<br /></a>
+}
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Предмет</th>
+            <th scope="col">Группа</th>
+            @if (User.IsInRole("Teacher"))
+            {
+                <th scope="col">Действие</th>
+                <th scope="col">Действие</th>
+                @*тут бы объединить 2 стролбца в 1*@
+            } 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.gisList){
+            <tr>
+                <th scope ="row">
+                    <p> @item.IdSubjectNavigation.Name <br /></p>
+                </th>
+                <th>
+                    <p> @item.IdGroupsNavigation.Name <br /></p>
+                </th>
+                @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
+                {
+                    <td>
+                        <form mehtod="post" asp-contoller="Group" asp-action="DeleteGroupInSub" asp-route-id="@item.Id">
+                            <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Group" asp-action="UpdateGroupInSub" asp-route-id="@item.Id">Изменить</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

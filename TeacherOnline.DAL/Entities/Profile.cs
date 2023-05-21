@@ -24,6 +24,8 @@ public partial class Profile
 
     public virtual ICollection<File> Files { get; set; } = new List<File>();
 
+    public virtual ICollection<GroupsInSub> GroupsInSubs { get; set; } = new List<GroupsInSub>();
+
     public virtual Group? GroupsNavigation { get; set; }
 
     public virtual User IdNavigation { get; set; } = null!;

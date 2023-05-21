@@ -16,6 +16,9 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(Subject item)
         {
+            //собакнуть айди, поменять применяемое на номер подгруппы
+            var count = GetAll().Count();
+            item.Id = count == 0 ? 1 : count + 1;
             _context.Subjects.Add(item);
             _context.SaveChanges();
         }
@@ -24,12 +27,15 @@ namespace TeacherOnline.BLL.Services
             var Subject = _context.Subjects.FirstOrDefault(u => u.Id == item.Id);
             if (Subject != null)
             {
-                Subject.IdTeacher = item.IdTeacher;
+                Subject.IdTeacterPract = item.IdTeacterPract;
                 Subject.Name = item.Name;
+                Subject.PartGroup = item.PartGroup;
                 Subject.About = item.About;
                 _context.Subjects.Update(Subject);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("subject is not found?");
         }
 
         public void Delete(int id)
@@ -39,22 +45,24 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Subjects.Remove(Subject);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("subject is not found?");
         }
 
         public IEnumerable<Subject> Find(Func<Subject, bool> predicate)
         {
-            return _context.Subjects.Include(u => u.IdTeacherNavigation).Where(predicate).AsEnumerable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation).Where(predicate);
         }
 
-        public IQueryable<Subject> Get(int id)
+        public Subject Get(int id)
         {
-            return _context.Subjects.Include(u => u.IdTeacherNavigation).Where(u => u.Id == id).AsQueryable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation).FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<Subject> GetAll()
         {
-            return _context.Subjects.Include(u => u.IdTeacherNavigation).AsEnumerable();
+            return _context.Subjects.Include(u => u.IdTeacherNavigation);
         }
     }
 }

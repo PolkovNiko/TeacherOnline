@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Создать";
+
+}
+@model TeacherOnline.DTO.ViewModel.GroupInSubVM;
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Group" asp-action="CreateGroupInSub" method="post">
+    <div class="mb-3">
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Группа</label>
+            <select class="form-select" asp-for="@Model.groupsInSub.IdGroups">
+                @foreach (var item in Model.groups)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Предмет</label>
+            <select class="form-select" asp-for="@Model.groupsInSub.IdSubject">
+                @foreach (var item in Model.subjects)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Создать предмет</button>
+</form>

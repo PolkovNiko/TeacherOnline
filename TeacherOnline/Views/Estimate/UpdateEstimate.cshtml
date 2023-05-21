@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Обновить отметку";
+
+}
+@functions {
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName[0]}. {profile.Otchestvo[0]}.";
+        return fioUser;
+    }
+    public string fioTeacher(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioTeacher = $"{profile.LastName} {profile.FirstName[0]}. {profile.Otchestvo[0]}.";
+        return fioTeacher;
+    }
+}
+@model TeacherOnline.DTO.ViewModel.EstimateVM;
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Estimate" asp-action="UpdateEstimate" method="post">
+    <input readonly hidden type="number" class="form-control" value="@Model.estimate.Id" asp-for="@Model.estimate.Id">
+    <div class="mb-3">
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Предмет</label>
+            <select class="form-select" asp-for="@Model.estimate.IdSubject">
+                @foreach (var item in Model.subjects)
+                {
+                    if(item.Id == Model.estimate.IdSubject)
+                    {
+                        <option select value="@item.Id">@item.Name</option>
+                        continue;
+                    }
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Учащийся</label>
+            <select class="form-select" asp-for="@Model.estimate.IdUser">
+                @foreach (var item in Model.users)
+                {
+                    if(item.Id == Model.estimate.IdUser)
+                    {
+                        <option select value="@item.Id">@fioUser(item)</option>
+                        continue;
+                    }
+                    <option value="@item.Id">@fioUser(item)</option>
+                }
+            </select>
+        </div>
+        <label class="form-label">Отметка</label>
+        <input type="range" class="form-range" min="1" max="10" value="@Model.estimate.Score" asp-for="@Model.estimate.Score">
+        @*<div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Предмет</label>
+            <select class="form-select" asp-for="@Model.estimate.IdTeacher">
+                @foreach (var item in Model.teacher)
+                {
+                    if(item.Id == Model.estimate.IdTeacher)
+                    {
+                        <option select value="@item.Id">@fioUser(item) </option>
+                        continue;
+                    }
+                    <option value="@item.Id">@fioUser(item)</option>
+                }
+            </select>
+        </div>*@
+    </div>
+    <button type="submit" class="btn btn-primary">Создать предмет</button>
+</form>

@@ -7,8 +7,8 @@ namespace TeacherOnline.BLL.Interfaces
         void Create(Profile item, Stream stream);
         void Delete(int id);
         void Update(Profile item, Stream stream);
-        List<Profile> GetAll();
+        IEnumerable<Profile> GetAll();
         Profile Get(int id);
-        List<Profile> Find(Func<Profile, bool> predicate);
+        IEnumerable<Profile> Find(Func<Profile, bool> predicate);
     }
 }

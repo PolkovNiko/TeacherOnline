@@ -80,6 +80,11 @@ public partial class AssistantTeachingContext : DbContext
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.GroupsInSubs)
                 .HasForeignKey(d => d.IdSubject)
                 .HasConstraintName("FK_GroupsInSub_Subjects");
+
+            entity.HasOne(d => d.IdTeacherNavigation).WithMany(p => p.GroupsInSubs)
+                .HasForeignKey(d => d.IdTeacher)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_GroupsInSub_Profile");
         });
 
         modelBuilder.Entity<Profile>(entity =>

@@ -7,14 +7,6 @@
     <h1>Пока так, придумать наполнение (приветствие) @User.Identity.IsAuthenticated</h1>
     <h1>User.IsInRole == @User.IsInRole("Teacher")</h1>
 
-@*<p>
-    <label>Аватар</label>
-    <input name="Avatar" type="file" class="form-control" />
-</p>
-<p>
-    <input type="submit" value="Добавить" />
-</p>
-*@
 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     <p>

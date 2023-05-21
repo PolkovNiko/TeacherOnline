@@ -26,6 +26,7 @@ builder.Services.AddTransient<ISubject, SubjectService>();
 builder.Services.AddTransient<IUser, UserService>();
 builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
 builder.Services.AddTransient<IConvertModels, ConvertService>();
+builder.Services.AddTransient<IGroupsInSub, GroupsInSubService>();
 
 // Add services to the container.
 builder.Services.AddAuthentication("Cookies")

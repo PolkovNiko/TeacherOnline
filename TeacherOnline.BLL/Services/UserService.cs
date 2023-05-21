@@ -28,7 +28,9 @@ namespace TeacherOnline.BLL.Services
                 User.Email = item.Email;
                 _context.Users.Update(User);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("user is not found?");
         }
 
         public void Delete(int id)
@@ -38,22 +40,24 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Users.Remove(User);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("user is not found?");
         }
 
         public IEnumerable<User> Find(Func<User, bool> predicate)
         {
-            return _context.Users.Where(predicate).AsEnumerable();
+            return _context.Users.Where(predicate);
         }
 
-        public IQueryable<User> Get(int id)
+        public User Get(int id)
         {
-            return _context.Users.Where(u => u.Id == id).AsQueryable();
+            return _context.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<User> GetAll()
         {   
-            return _context.Users.AsEnumerable();
+            return _context.Users;
         }
     }
 }

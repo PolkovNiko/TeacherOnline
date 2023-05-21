@@ -6,11 +6,12 @@
 @if (User.IsInRole("Teacher"))
 {
     <a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
+    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь "группа-предмет"<br /></a>
+    <a class="btn btn-success" asp-controller="Subject" asp-action="GroupInSub">Просмотр связей "группа-предмет"<br /></a>
 }
     @*идея: эту страницу сделать доступной для преподавателя и учащегося, а для учащегося сделать возможность просмотр отметок по предмету
         но тогда зачем страница с отметками.....
     *@
-
 <table class="table table-sm">
     <thead>
         <tr>
@@ -29,7 +30,7 @@
                 <th scope="row">
                     <a class="btn btn-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a>
                 </th>
-                @if(item.IdTeacher == (int)ViewData["Id"])
+                @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
                 {
                 <td>
                     <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">

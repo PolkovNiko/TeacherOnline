@@ -6,19 +6,27 @@
     //foreach(var item in )
     //SelectList selects = new SelectList()
 }
-@model TeacherOnline.DAL.Entities.Subject;
+@*@model TeacherOnline.DAL.Entities.Subject;*@
+@model TeacherOnline.DTO.ViewModel.SubjectGroupTeacherVM;
 <h2>@ViewData["Title"]</h2>
 
 <form asp-controller="Subject" asp-action="CreateSub" method="post">
     <div class="mb-3">
         <label class="form-label">Название предмета</label>
-        <input type="text" class="form-control" asp-for="@Model.Name">
-        @*<label class="form-label">Преподаватель основной</label>
-        <select class="form-control" asp-for="@Model.IdTeacher" asp-items="Model.Teachers"></select>*@
-        @*<label class="form-label">Преподаватель на практические занятия</label>
-        <select class="form-control" asp-for="@Model.IdTeacherPract" asp-items="Model.Teachers"></select>*@
+        <input type="text" class="form-control" asp-for="@Model.sub.Name">
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Группа</label>
+            <select class="form-select" asp-for="@Model.sub.IdTeacterPract">
+                @foreach (var item in Model.teacher)
+                {
+                    <option value="@item.Id">@item.FirstName @item.LastName @item.Otchestvo</option>
+                }
+            </select>
+        </div>
+        <label class="form-label">Номер подгруппы для доп. преподавателя</label>
+        <input type="range" class="form-range" min="0" max="1" asp-for="@Model.sub.PartGroup">
         <label class="form-label">О предмете</label>
-        <input type="text" class="form-control" asp-for="@Model.About">
+        <input type="text" class="form-control" asp-for="@Model.sub.About">
     </div>
     <button type="submit" class="btn btn-primary">Создать предмет</button>
 </form>

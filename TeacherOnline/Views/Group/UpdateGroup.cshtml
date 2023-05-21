@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Создать группу";
+
+}
+@model TeacherOnline.DAL.Entities.Group;
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Group" asp-action="UpdateGroup" method="post">
+    <div class="mb-3">
+        <label class="form-label">Группа</label>
+        <input type="text" class="form-control" value="@Model.Name" asp-for="@Model.Name">
+        <label class="form-label">Специальность</label>
+        <input type="text" class="form-control" value="@Model.Specialty" asp-for="@Model.Specialty">
+    </div>
+    <button type="submit" class="btn btn-primary">Создать Группу</button>
+</form>

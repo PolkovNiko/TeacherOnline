@@ -27,7 +27,9 @@ namespace TeacherOnline.BLL.Services
                 Group.Specialty = item.Specialty;
                 _context.Groups.Update(Group);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("group is not found?");
         }
 
         public void Delete(int id)
@@ -37,22 +39,24 @@ namespace TeacherOnline.BLL.Services
             {
                 _context.Groups.Remove(Group);
                 _context.SaveChanges();
+                return;
             }
+            throw new Exception("group is not found?");
         }
 
         public IEnumerable<Group> Find(Func<Group, bool> predicate)
         {
-            return _context.Groups.Where(predicate).AsEnumerable();
+            return _context.Groups.Where(predicate);
         }
 
-        public IQueryable<Group> Get(int id)
+        public Group Get(int id)
         {
-            return _context.Groups.Where(u => u.Id == id).AsQueryable();
+            return _context.Groups.FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<Group> GetAll()
         {
-            return _context.Groups.AsEnumerable();
+            return _context.Groups;
         }
     }
 }

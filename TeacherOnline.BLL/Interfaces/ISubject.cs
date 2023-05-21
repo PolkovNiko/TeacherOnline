@@ -8,7 +8,7 @@ namespace TeacherOnline.BLL.Interfaces
         void Delete(int id);
         void Update(Subject item);
         IEnumerable<Subject> GetAll();
-        IQueryable<Subject> Get(int id);
+        Subject Get(int id);
         IEnumerable<Subject> Find(Func<Subject, bool> predicate);
     }
 }
