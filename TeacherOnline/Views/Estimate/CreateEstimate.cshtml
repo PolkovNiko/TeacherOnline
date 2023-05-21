@@ -20,26 +20,102 @@
 <form asp-controller="Estimate" asp-action="CreateEstimate" method="post">
     <div class="mb-3">
         <div class="col-md-3">
-            <label for="inputDepartment" class="form-label">Предмет</label>
-            <select class="form-select" asp-for="@Model.estimate.IdSubject">
-                @foreach (var item in Model.subjects)
+            <label for="inputDepartment" class="form-label">Группа</label>
+            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject');">
+                @foreach (var item in Model.groups)
                 {
                     <option value="@item.Id">@item.Name</option>
                 }
             </select>
         </div>
         <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Предмет</label>
+            <select id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject"></select>
+        </div>
+        <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Учащийся</label>
-            <select class="form-select" asp-for="@Model.estimate.IdUser">
-                @foreach (var item in Model.users)
-                {
-                    @*тут нужно пилить запросы на ajax-се*@
-                    <option value="@item.Id">@fioUser(item)</option>
-                }
-            </select>
+            <select id="Users" class="form-select" asp-for="@Model.estimate.IdUser"></select>
         </div>
         <label class="form-label">Отметка</label>
         <input type="range" class="form-range" min="1" max="10" asp-for="@Model.estimate.Score">
     </div>
     <button type="submit" class="btn btn-primary">Создать предмет</button>
 </form>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        var tempGroupId = 0;
+        function LoadDLOnUsers(SubjectId, htmlIdUsers){
+            var listUser = $("#"+htmlIdUsers);
+            listUser.empty();
+            listUser.append($('<option/>',
+                {
+                    value: null,
+                    text: "Выберите студента"
+                }));
+            var selectedSubject = SubjectId.options[SubjectId.selectedIndex].value;
+            var selectedGroup = tempGroupId.options[tempGroupId.selectedIndex].value;
+            if (selectedSubject != null && selectedSubject != '' && selectedGroup != null && selectedGroup != '') {
+                $.getJSON('@Url.Action("GetUserBySubject")', { subjectId: selectedSubject, groupId: selectedGroup }, function (users){
+                    if(users !=null && !jQuery.isEmptyObject(users)){
+                        $.each(users, function (index, user){
+                            listUser.append($('<option/>',{
+                                value: user.value,
+                                text: user.text
+                            }));
+                        });
+                    };
+                });
+            };
+        };
+        function LoadDLOnSubject(GroupId, htmlIdSubject) {
+            tempGroupId = GroupId;
+            var listubject = $("#" + htmlIdSubject);
+            listubject.empty();
+            listubject.append($('<option/>',
+                {
+                    value: null,
+                    text: "Выберите предмет"
+                }));
+            var selectedGroup = GroupId.options[GroupId.selectedIndex].value;
+            if (selectedGroup != null && selectedGroup != '') {
+                $.getJSON('@Url.Action("GetSubjectOnGroup")', {groupId: selectedGroup }, function (subjects){
+                    if (subjects != null && !jQuery.isEmptyObject(subjects)) {
+                        $.each(subjects, function (index, subject) {
+                            listubject.append($('<option/>', {
+                                value: subject.value,
+                                text: subject.text
+                            }));
+                        });
+                    };
+                });
+            };
+        };
+    </script>
+}
+@*
+<script>
+    $(document).ready(function(){
+        $('#country').on('change', function(){
+            var countryID = $(this).val();
+            if(countryID){
+                $.ajax({
+                    type:'POST',
+                    url:'ajaxData.php',
+                    data:'country_id='+countryID,
+                    success:function(html){
+                        $('#state').html(html);
+                        $('#city').html('
+    <option value="">Select state first</option>');
+                    }
+                });
+            }else{
+                $('#state').html('
+    <option value="">Select country first</option>');
+                $('#city').html('
+    <option value="">Select state first</option>');
+            }
+        });
+</script>*@

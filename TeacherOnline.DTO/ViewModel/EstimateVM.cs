@@ -9,5 +9,6 @@ namespace TeacherOnline.DTO.ViewModel
         public IEnumerable<Profile> users { get; set; } = new List<Profile>();
         public IEnumerable<Subject> subjects { get; set; } = new List<Subject>();
         public IEnumerable<Estimate> estimateList { get; set; } = new List<Estimate>();
+        public IEnumerable<Group> groups { get; set; } = new List<Group>();
     }
 }

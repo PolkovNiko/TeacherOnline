@@ -15,15 +15,12 @@
 }
 @model TeacherOnline.DTO.ViewModel.EstimateVM;
 
-    <h1>Группы</h1>
+<h1>@ViewData["Title"]</h1>
 @if (User.IsInRole("Teacher"))
 {
     <a class="btn btn-success" asp-controller="Estimate" asp-action="CreateEstimate">Создать группу<br /></a>
 }
 
-<p>
-    Отметки
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -48,7 +45,7 @@
                     <form method="post" asp-controller="Estimate" asp-action="DeleteEstimate" asp-route-id="@item.Id">
                         <button class="btn btn-danger" type="submit">Удалить</button> </form> 
                 </td> 
-                }
+                @*}*@
             </tr>
         }
     </tbody>

@@ -9,6 +9,7 @@ namespace TeacherOnline.BLL.Interfaces
         void Update(GroupsInSub item);
         IEnumerable<GroupsInSub> GetAll();
         GroupsInSub Get(int id);
+        GroupsInSub Get(Func<GroupsInSub, bool> predicate);
         IEnumerable<GroupsInSub> Find(Func<GroupsInSub, bool> predicate);
     }
 }

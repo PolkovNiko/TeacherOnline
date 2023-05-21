@@ -61,10 +61,8 @@ namespace TeacherOnline.Controllers
         [Authorize(Roles = "Study, Teacher")]
         public IActionResult CreateProfile()
         {
-            //Profile st = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
             UserProfileVM vm = new UserProfileVM();
             vm.Group = _group.GetAll();
-            //vm.Profile = new Profile() { Id = Convert.ToInt32(HttpContext.Request.Cookies["Id"]) };
             return View(vm);
         }
 

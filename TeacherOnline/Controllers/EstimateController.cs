@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TeacherOnline.BLL.Interfaces;
@@ -16,13 +17,15 @@ namespace TeacherOnline.Controllers
         IGroup _group;
         ISubject _subject;
         IEstimate _estimate;
+        IGroupsInSub _groupsInSub;
 
-        public EstimateController(IGroup group, ISubject subject, IProfile profile, IEstimate estimate)
+        public EstimateController(IGroup group, ISubject subject, IProfile profile, IEstimate estimate, IGroupsInSub groupsInSub)
         {
             _group = group;
             _subject = subject;
             _profile = profile;
             _estimate = estimate;
+            _groupsInSub = groupsInSub;
         }
 
         //-------------------------------------------------------------------------------------------
@@ -39,8 +42,9 @@ namespace TeacherOnline.Controllers
         public IActionResult CreateEstimate()
         {
             var vm = new EstimateVM();
-            vm.subjects = _subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
-            vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study");
+            //vm.subjects = _subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
+            vm.groups = _group.GetAll();
+            //vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study");
             return View(vm);
         }
 
@@ -53,6 +57,32 @@ namespace TeacherOnline.Controllers
             return View(_group.Get(id));
         }
 
+
+        [HttpGet]
+        public JsonResult GetUserBySubject(int subjectId, int groupId)
+        {
+            EstimateVM vm = new EstimateVM();
+            var groups = _groupsInSub.Get(u => u.IdGroups == groupId && u.IdSubject == subjectId);
+            var list = _profile.GetAll().Where(u => u.Groups == groups.IdGroups)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = $"{u.LastName} {u.FirstName} {u.Otchestvo}"
+                }).ToList();
+            return Json(list);
+        }
+        
+        [HttpGet]
+        public JsonResult GetSubjectOnGroup(int groupId)
+        {
+            var list = _groupsInSub.GetAll().Where(u=> u.IdGroups == groupId && u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"))
+                .Select(u=> new SelectListItem
+                {
+                     Value = u.IdSubjectNavigation.Id.ToString(),
+                     Text = u.IdSubjectNavigation.Name
+                }).ToList();
+            return Json(list);
+        }
 
         //-------------------------------------------------------------------------------------------
         //Method Post

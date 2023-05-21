@@ -56,6 +56,11 @@ namespace TeacherOnline.BLL.Services
         {
             return _context.GroupsInSubs.FirstOrDefault(u => u.Id == id);
         }
+        
+        public GroupsInSub Get(Func<GroupsInSub, bool> predicate)
+        {
+            return _context.GroupsInSubs.FirstOrDefault(predicate);
+        }
 
         public IEnumerable<GroupsInSub> GetAll()
         {
