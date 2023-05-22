@@ -34,7 +34,7 @@ namespace TeacherOnline.Controllers
         public IActionResult Subject()
         {
             ViewData["Id"] = HttpContext.Session.GetInt32("Id").ToString(); //пересмотреть отправляемые данные
-            return View(_subject.GetAll());
+            return View(_subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id")));
         }
 
         [Authorize(Roles = "Teacher")]

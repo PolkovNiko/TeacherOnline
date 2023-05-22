@@ -16,12 +16,12 @@
     <thead>
         <tr>
             <th scope="col">Название предмета</th>
-            @if (User.IsInRole("Teacher"))
-            {
+@*            @if (User.IsInRole("Teacher"))
+            {*@
                 <th scope="col">Действие</th>
                 <th scope="col">Действие</th>
                 @*тут бы объединить 2 стролбца в 1*@
-            } @*тут проверочка на иденцифицированного пользователя*@
+             @*тут проверочка на иденцифицированного пользователя*@
         </tr>
     </thead>
     <tbody>
@@ -30,8 +30,8 @@
                 <th scope="row">
                     <a class="btn btn-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a>
                 </th>
-                @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
-                {
+@*                @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
+                {*@
                 <td>
                     <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
                         <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
@@ -40,7 +40,7 @@
                 <td>
                     <a class="btn btn-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
                 </td>
-                }
+                
             </tr>
         }
     </tbody>

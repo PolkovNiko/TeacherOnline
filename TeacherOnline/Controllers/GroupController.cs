@@ -50,7 +50,7 @@ namespace TeacherOnline.Controllers
         {
             ViewData["Id"] = HttpContext.Session.GetInt32("Id");
             GroupInSubVM vm = new GroupInSubVM();
-            vm.gisList = _groupInSub.GetAll();
+            vm.gisList = _groupInSub.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
             return View(vm);
         }
 
