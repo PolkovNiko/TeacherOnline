@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Регистрация";
+    ViewData["Title"] = "Обновить пользователя";
 }
 @model IQueryable<TeacherOnline.DAL.Entities.User>
 
@@ -19,7 +19,7 @@
         <label for="InputEmail" class="form-label">Почта</label>
             <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@item.Email" name="Email">
         <div id="emailHelp" class="form-text">Мы данные о вашей почте никому не передаём</div>
-@*        <label for="exampleInputEmail1" class="form-label">Тип пользователя</label>
+        <label for="exampleInputEmail1" class="form-label">Тип пользователя</label>
             <select class="form-select" aria-label="rank" asp-for="@item.Rank">
             @if (item.Rank == "Study")
             {
@@ -39,8 +39,8 @@
                 <option value="Admin">Админ</option>
                 <option value="Study">Студент</option>
             }
-        </select>*@
+        </select>
       </div>
-      <button type="submit" class="btn btn-primary">Создать пользователя</button>
+      <button type="submit" class="btn btn-primary">Обновить пользователя</button>
       }
 </form>

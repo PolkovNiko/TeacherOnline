@@ -49,7 +49,7 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<GroupsInSub> Find(Func<GroupsInSub, bool> predicate)
         {
-            return _context.GroupsInSubs.Where(predicate);
+            return _context.GroupsInSubs.Include(u=> u.IdGroupsNavigation).Include(x => x.IdSubjectNavigation).Where(predicate);
         }
 
         public GroupsInSub Get(int id)
@@ -59,7 +59,7 @@ namespace TeacherOnline.BLL.Services
         
         public GroupsInSub Get(Func<GroupsInSub, bool> predicate)
         {
-            return _context.GroupsInSubs.FirstOrDefault(predicate);
+            return _context.GroupsInSubs.Include(u => u.IdGroupsNavigation).FirstOrDefault(predicate);
         }
 
         public IEnumerable<GroupsInSub> GetAll()

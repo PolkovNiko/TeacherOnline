@@ -3,15 +3,12 @@
 }
 @model TeacherOnline.DTO.ViewModel.GroupInSubVM;
 
-    <h1>Группы</h1>
+<h1>@ViewData["Title"]</h1>
 @if (User.IsInRole("Teacher"))
 {
     <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroup">Создать группу<br /></a>
 }
 
-<p>
-    Список пользователей
-</p>
 <table class="table">
     <thead>
         <tr>

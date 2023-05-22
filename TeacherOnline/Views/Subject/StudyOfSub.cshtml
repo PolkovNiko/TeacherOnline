@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Все сотрудники";
+    ViewData["Title"] = "Учащиеся в предмете";
     int i = 0;
 }
 @model IEnumerable<TeacherOnline.DAL.Entities.Profile>
@@ -26,7 +26,7 @@
     }*@
     if (i == 0)
     {
-        <h1>Сотрудников в данном отделе нет!!!</h1>
+        <h1>Учащихся в данном предмете нет!!!</h1>
         <h1>Приходите завтра</h1>
         return;
     }

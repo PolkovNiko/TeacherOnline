@@ -1,4 +1,5 @@
-﻿using TeacherOnline.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 
@@ -46,7 +47,7 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<Group> Find(Func<Group, bool> predicate)
         {
-            return _context.Groups.Where(predicate);
+            return _context.Groups.Include(u=> u.GroupsInSubs).Where(predicate);
         }
 
         public Group Get(int id)

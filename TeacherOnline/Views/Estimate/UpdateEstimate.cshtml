@@ -14,6 +14,7 @@
         return fioTeacher;
     }
 }
+
 @model TeacherOnline.DTO.ViewModel.EstimateVM;
 <h2>@ViewData["Title"]</h2>
 
@@ -21,13 +22,27 @@
     <input readonly hidden type="number" class="form-control" value="@Model.estimate.Id" asp-for="@Model.estimate.Id">
     <div class="mb-3">
         <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Группа</label>
+            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
+                @foreach (var item in Model.groups)
+                {
+                    if(item.Id == Model.OneGroup.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                        continue;
+                    }
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Предмет</label>
-            <select class="form-select" asp-for="@Model.estimate.IdSubject">
+            <select id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject">
                 @foreach (var item in Model.subjects)
                 {
                     if(item.Id == Model.estimate.IdSubject)
                     {
-                        <option select value="@item.Id">@item.Name</option>
+                        <option selected value="@item.Id">@item.Name</option>
                         continue;
                     }
                     <option value="@item.Id">@item.Name</option>
@@ -36,12 +51,12 @@
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Учащийся</label>
-            <select class="form-select" asp-for="@Model.estimate.IdUser">
+            <select id="Users" class="form-select" asp-for="@Model.estimate.IdUser">
                 @foreach (var item in Model.users)
                 {
                     if(item.Id == Model.estimate.IdUser)
                     {
-                        <option select value="@item.Id">@fioUser(item)</option>
+                        <option selected value="@item.Id">@fioUser(item)</option>
                         continue;
                     }
                     <option value="@item.Id">@fioUser(item)</option>
@@ -50,20 +65,66 @@
         </div>
         <label class="form-label">Отметка</label>
         <input type="range" class="form-range" min="1" max="10" value="@Model.estimate.Score" asp-for="@Model.estimate.Score">
-        @*<div class="col-md-3">
-            <label for="inputDepartment" class="form-label">Предмет</label>
-            <select class="form-select" asp-for="@Model.estimate.IdTeacher">
-                @foreach (var item in Model.teacher)
-                {
-                    if(item.Id == Model.estimate.IdTeacher)
-                    {
-                        <option select value="@item.Id">@fioUser(item) </option>
-                        continue;
-                    }
-                    <option value="@item.Id">@fioUser(item)</option>
-                }
-            </select>
-        </div>*@
     </div>
-    <button type="submit" class="btn btn-primary">Создать предмет</button>
+    <button type="submit" class="btn btn-primary">Изменить отметку</button>
 </form>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        var tempGroupId = 0;
+        function LoadDLOnUsers(SubjectId, htmlIdUsers) {
+            var listUser = $("#" + htmlIdUsers);
+            listUser.empty();
+            listUser.append($('<option/>',
+                {
+                    value: null,
+                    text: "Выберите студента"
+                }));
+            $(listUser[0][0]).attr('disabled', true);
+            $(listUser[0][0]).attr('selected', true);
+            var selectedSubject = SubjectId.options[SubjectId.selectedIndex].value;
+            var selectedGroup = tempGroupId.options[tempGroupId.selectedIndex].value;
+            if (selectedSubject != null && selectedSubject != '' && selectedGroup != null && selectedGroup != '') {
+                $.getJSON('@Url.Action("GetUserBySubject")', { subjectId: selectedSubject, groupId: selectedGroup }, function (users) {
+                    if (users != null && !jQuery.isEmptyObject(users)) {
+                        $.each(users, function (index, user) {
+                            listUser.append($('<option/>', {
+                                value: user.value,
+                                text: user.text
+                            }));
+                        });
+                    };
+                });
+            };
+        };
+        function LoadDLOnSubject(GroupId, htmlIdSubject, htmlIdUsers) {
+            tempGroupId = GroupId;
+            var listubject = $("#" + htmlIdSubject);
+            listubject.empty();
+            listubject.append($('<option/>',
+                {
+                    value: null,
+                    text: "Выберите предмет"
+                }));
+            $(listubject[0][0]).attr('disabled', true);
+            $(listubject[0][0]).attr('selected', true);
+            var listUser = $("#" + htmlIdUsers);
+            listUser.empty();
+            var selectedGroup = GroupId.options[GroupId.selectedIndex].value;
+            if (selectedGroup != null && selectedGroup != '') {
+                $.getJSON('@Url.Action("GetSubjectOnGroup")', { groupId: selectedGroup }, function (subjects) {
+                    if (subjects != null && !jQuery.isEmptyObject(subjects)) {
+                        $.each(subjects, function (index, subject) {
+                            listubject.append($('<option/>', {
+                                value: subject.value,
+                                text: subject.text
+                            }));
+                        });
+                    };
+                });
+            };
+        };
+    </script>
+}

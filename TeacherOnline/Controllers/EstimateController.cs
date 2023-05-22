@@ -42,9 +42,7 @@ namespace TeacherOnline.Controllers
         public IActionResult CreateEstimate()
         {
             var vm = new EstimateVM();
-            //vm.subjects = _subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
             vm.groups = _group.GetAll();
-            //vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study");
             return View(vm);
         }
 
@@ -52,9 +50,11 @@ namespace TeacherOnline.Controllers
         {
             var vm = new EstimateVM();
             vm.estimate = _estimate.Get(id);
-            vm.subjects = _subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
-            vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study");
-            return View(_group.Get(id));
+            vm.OneGroup = _groupsInSub.Get(u => u.IdSubject == vm.estimate.IdSubject).IdGroupsNavigation;
+            vm.groups = _group.GetAll();
+            vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study" && u.Groups == vm.OneGroup.Id);
+            vm.subjects = _groupsInSub.Find(u =>u.IdGroups == vm.OneGroup.Id && u.IdSubjectNavigation.IdTeacher == (int)HttpContext.Session.GetInt32("Id")).Select(u=>u.IdSubjectNavigation);
+            return View(vm);
         }
 
 

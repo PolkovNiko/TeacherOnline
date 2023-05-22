@@ -10,5 +10,6 @@ namespace TeacherOnline.DTO.ViewModel
         public IEnumerable<Subject> subjects { get; set; } = new List<Subject>();
         public IEnumerable<Estimate> estimateList { get; set; } = new List<Estimate>();
         public IEnumerable<Group> groups { get; set; } = new List<Group>();
+        public Group OneGroup { get; set; } = new Group();
     }
 }

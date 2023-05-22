@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Изменить";
+    ViewData["Title"] = "Изменить предмет";
 }
 @model TeacherOnline.DTO.ViewModel.SubjectGroupTeacherVM;
 
@@ -22,5 +22,5 @@
         <label class="form-label">О предмете</label>
         <input type="text" class="form-control" value="@Model.sub.About" asp-for="@Model.sub.About">
     </div>
-    <button type="submit" class="btn btn-primary">Создать предмет</button>
+    <button type="submit" class="btn btn-primary">Изменить предмет</button>
 </form>

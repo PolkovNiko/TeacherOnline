@@ -21,7 +21,8 @@
     <div class="mb-3">
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Группа</label>
-            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject');">
+            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
+                <option selected disabled value="">Выберите группу</option>
                 @foreach (var item in Model.groups)
                 {
                     <option value="@item.Id">@item.Name</option>
@@ -39,7 +40,7 @@
         <label class="form-label">Отметка</label>
         <input type="range" class="form-range" min="1" max="10" asp-for="@Model.estimate.Score">
     </div>
-    <button type="submit" class="btn btn-primary">Создать предмет</button>
+    <button type="submit" class="btn btn-primary">Создать отметку</button>
 </form>
 @section Scripts{
     @{
@@ -47,21 +48,23 @@
     }
     <script type="text/javascript">
         var tempGroupId = 0;
-        function LoadDLOnUsers(SubjectId, htmlIdUsers){
-            var listUser = $("#"+htmlIdUsers);
+        function LoadDLOnUsers(SubjectId, htmlIdUsers) {
+            var listUser = $("#" + htmlIdUsers);
             listUser.empty();
             listUser.append($('<option/>',
                 {
                     value: null,
                     text: "Выберите студента"
                 }));
+            $(listUser[0][0]).attr('disabled', true);
+            $(listUser[0][0]).attr('selected', true);
             var selectedSubject = SubjectId.options[SubjectId.selectedIndex].value;
             var selectedGroup = tempGroupId.options[tempGroupId.selectedIndex].value;
             if (selectedSubject != null && selectedSubject != '' && selectedGroup != null && selectedGroup != '') {
-                $.getJSON('@Url.Action("GetUserBySubject")', { subjectId: selectedSubject, groupId: selectedGroup }, function (users){
-                    if(users !=null && !jQuery.isEmptyObject(users)){
-                        $.each(users, function (index, user){
-                            listUser.append($('<option/>',{
+                $.getJSON('@Url.Action("GetUserBySubject")', { subjectId: selectedSubject, groupId: selectedGroup }, function (users) {
+                    if (users != null && !jQuery.isEmptyObject(users)) {
+                        $.each(users, function (index, user) {
+                            listUser.append($('<option/>', {
                                 value: user.value,
                                 text: user.text
                             }));
@@ -70,7 +73,7 @@
                 });
             };
         };
-        function LoadDLOnSubject(GroupId, htmlIdSubject) {
+        function LoadDLOnSubject(GroupId, htmlIdSubject, htmlIdUsers) {
             tempGroupId = GroupId;
             var listubject = $("#" + htmlIdSubject);
             listubject.empty();
@@ -79,9 +82,13 @@
                     value: null,
                     text: "Выберите предмет"
                 }));
+            $(listubject[0][0]).attr('disabled', true);
+            $(listubject[0][0]).attr('selected', true);
+            var listUser = $("#" + htmlIdUsers);
+            listUser.empty();
             var selectedGroup = GroupId.options[GroupId.selectedIndex].value;
             if (selectedGroup != null && selectedGroup != '') {
-                $.getJSON('@Url.Action("GetSubjectOnGroup")', {groupId: selectedGroup }, function (subjects){
+                $.getJSON('@Url.Action("GetSubjectOnGroup")', { groupId: selectedGroup }, function (subjects) {
                     if (subjects != null && !jQuery.isEmptyObject(subjects)) {
                         $.each(subjects, function (index, subject) {
                             listubject.append($('<option/>', {
@@ -95,27 +102,3 @@
         };
     </script>
 }
-@*
-<script>
-    $(document).ready(function(){
-        $('#country').on('change', function(){
-            var countryID = $(this).val();
-            if(countryID){
-                $.ajax({
-                    type:'POST',
-                    url:'ajaxData.php',
-                    data:'country_id='+countryID,
-                    success:function(html){
-                        $('#state').html(html);
-                        $('#city').html('
-    <option value="">Select state first</option>');
-                    }
-                });
-            }else{
-                $('#state').html('
-    <option value="">Select country first</option>');
-                $('#city').html('
-    <option value="">Select state first</option>');
-            }
-        });
-</script>*@
