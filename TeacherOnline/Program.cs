@@ -21,7 +21,7 @@ builder.Services.AddSession(cfg => {
     cfg.Cookie.Name = "TempSession";
     cfg.Cookie.HttpOnly = true;
 });
-//builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
+builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
 
 builder.Services.AddSingleton<IUserIdProvider, CustomerUserIdProvider>();
 builder.Services.AddSignalR();
