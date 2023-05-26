@@ -16,10 +16,20 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(File item)
         {
-            var count = GetAll().Count();
-            item.Id = count == 0 ? 1 : count + 1;
-            _context.Files.Add(item);
-            _context.SaveChanges();
+            int index = 0;
+            while (true)
+            {
+                var count = GetAll().Count();
+                item.Id = count == 0 ? 1 : count + 1;
+                var temp = Get(item.Id);
+                if (temp is null)
+                {
+                    _context.Files.Add(item);
+                    _context.SaveChanges();
+                    return;
+                }
+                index++;
+            }
         }
         public void Update(File item)
         {

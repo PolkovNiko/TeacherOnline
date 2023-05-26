@@ -16,10 +16,20 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(GroupsInSub item)
         {
-            var count = GetAll().Count();
-            item.Id = count == 0 ? 1 : count + 1;
-            _context.GroupsInSubs.Add(item);
-            _context.SaveChanges();
+            int index = 0;
+            while (true)
+            {
+                var count = GetAll().Count();
+                item.Id = count == 0 ? 1 : count + 1 + index;
+                var temp = Get(item.Id);
+                if (temp is null)
+                {
+                    _context.GroupsInSubs.Add(item);
+                    _context.SaveChanges();
+                    return;
+                }
+                index++;
+            }
         }
         public void Update(GroupsInSub item)
         {

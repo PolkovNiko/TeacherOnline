@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TeacherOnline.DAL.Entities;
 
 namespace TeacherOnline.DAL;
@@ -14,6 +15,8 @@ public partial class AssistantTeachingContext : DbContext
     {
     }
 
+    public virtual DbSet<Chat> Chats { get; set; }
+
     public virtual DbSet<Estimate> Estimates { get; set; }
 
     public virtual DbSet<Entities.File> Files { get; set; }
@@ -21,6 +24,8 @@ public partial class AssistantTeachingContext : DbContext
     public virtual DbSet<Group> Groups { get; set; }
 
     public virtual DbSet<GroupsInSub> GroupsInSubs { get; set; }
+
+    public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
@@ -33,8 +38,26 @@ public partial class AssistantTeachingContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Chat>(entity =>
+        {
+            entity.ToTable("Chat");
+
+            entity.HasOne(d => d.IdUser1Navigation).WithMany(p => p.ChatIdUser1Navigations)
+                .HasForeignKey(d => d.IdUser1)
+                .HasConstraintName("FK_Chat_Profile");
+
+            entity.HasOne(d => d.IdUser2Navigation).WithMany(p => p.ChatIdUser2Navigations)
+                .HasForeignKey(d => d.IdUser2)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Chat_Profile1");
+        });
+
         modelBuilder.Entity<Estimate>(entity =>
         {
+            entity.Property(e => e.DateAdd).HasColumnType("date");
+            entity.Property(e => e.DateUpdate).HasColumnType("date");
+            entity.Property(e => e.Type).HasMaxLength(50);
+
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.Estimates)
                 .HasForeignKey(d => d.IdSubject)
                 .HasConstraintName("FK_Estimates_Subjects");
@@ -85,6 +108,23 @@ public partial class AssistantTeachingContext : DbContext
                 .HasForeignKey(d => d.IdTeacher)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_GroupsInSub_Profile");
+        });
+
+        modelBuilder.Entity<Message>(entity =>
+        {
+            entity.ToTable("Message");
+
+            entity.Property(e => e.Message1).HasColumnName("Message");
+            entity.Property(e => e.Time).HasColumnType("smalldatetime");
+
+            entity.HasOne(d => d.IdAuthorNavigation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.IdAuthor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Message_Profile");
+
+            entity.HasOne(d => d.IdChatNavigation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.IdChat)
+                .HasConstraintName("FK_Message_Chat");
         });
 
         modelBuilder.Entity<Profile>(entity =>

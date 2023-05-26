@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
+using TeacherOnline.BLL.SignalR;
 using TeacherOnline.DAL;
 using TeacherOnline.DTO;
+using TeacherOnline.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,11 @@ builder.Services.AddSession(cfg => {
     cfg.Cookie.Name = "TempSession";
     cfg.Cookie.HttpOnly = true;
 });
+//builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
+
+builder.Services.AddSingleton<IUserIdProvider, CustomerUserIdProvider>();
+builder.Services.AddSignalR();
+
 builder.Services.AddTransient<IAuth, AuthService>();
 builder.Services.AddTransient<IEstimate, EstimateService>();
 builder.Services.AddTransient<IFile, FileService>();
@@ -24,9 +33,10 @@ builder.Services.AddTransient<IGroup, GroupService>();
 builder.Services.AddTransient<IProfile, ProfileService>();
 builder.Services.AddTransient<ISubject, SubjectService>();
 builder.Services.AddTransient<IUser, UserService>();
-builder.Services.AddAutoMapper(typeof(MapperCfg).Assembly);
 builder.Services.AddTransient<IConvertModels, ConvertService>();
 builder.Services.AddTransient<IGroupsInSub, GroupsInSubService>();
+builder.Services.AddTransient<IChat, ChatService>();
+builder.Services.AddTransient<IMessage, MessageService>();
 
 // Add services to the container.
 builder.Services.AddAuthentication("Cookies")
@@ -57,6 +67,7 @@ app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<ChatHub>("/Chats");
 
 app.MapGet("/logout", async (HttpContext context) =>
 {
@@ -75,4 +86,6 @@ app.MapGet("/logout", async (HttpContext context) =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 app.Run();

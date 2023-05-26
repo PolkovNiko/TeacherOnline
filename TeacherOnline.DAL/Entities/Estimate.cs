@@ -12,6 +12,12 @@ public partial class Estimate
 
     public int Score { get; set; }
 
+    public string? Type { get; set; }
+
+    public DateTime? DateAdd { get; set; }
+
+    public DateTime? DateUpdate { get; set; }
+
     public virtual Subject IdSubjectNavigation { get; set; } = null!;
 
     public virtual Profile IdTeacherNavigation { get; set; } = null!;

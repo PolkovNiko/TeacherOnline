@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
@@ -75,7 +76,7 @@ namespace TeacherOnline.BLL.Services
 
         public Profile Get(int id)
         {
-            return _context.Profiles.FirstOrDefault(u => u.Id == id);
+            return _context.Profiles.Include(u=> u.GroupsNavigation).FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<Profile> GetAll()

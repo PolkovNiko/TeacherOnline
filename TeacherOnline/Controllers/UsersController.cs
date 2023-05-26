@@ -58,6 +58,21 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpGet]
+        public IActionResult CheckProfile(int id)
+        {
+            //if(id == (int)HttpContext.Session.GetInt32("Id"))
+            //{
+                UserProfileVM vm = new UserProfileVM();
+                vm.Profile = _profile.Get(id);
+                return View(vm);
+            //}
+            //else
+            //{
+            //    return RedirectToAction("UserProfile");
+            //}
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Study, Teacher")]
         public IActionResult CreateProfile()
         {

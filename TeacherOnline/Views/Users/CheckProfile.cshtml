@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Профиль";
+}
+@using TeacherOnline.DTO.ViewModel;
+@{
+    string x, y;
+    string date = "";
+    if (Model.Profile.Date.Month < 10) 
+    @*вот тут ошибка, возвращает нул, хотя должна быть дата.... писец*@
+    {
+        x = "0" + Model.Profile.Date.Month;
+        if (Model.Profile.Date.Day < 10)
+        {
+            y = "0" + Model.Profile.Date.Day;
+            date = Model.Profile.Date.Year + "-" + x + "-" + y;
+        }
+        else
+        { date = Model.Profile.Date.Year + "-" + x + "-" + Model.Profile.Date.Day; }
+
+    }
+    else if (Model.Profile.Date.Day < 10)
+    {
+        y = "0" + Model.Profile.Date.Day;
+        date = Model.Profile.Date.Year + "-" + Model.Profile.Date.Month + "-" + y;
+    }
+}
+
+@model UserProfileVM;
+
+<h2>@ViewData["Title"]</h2>
+
+    <a class="btn btn-outline-success" asp-controller="Users" asp-action="GetFile">Файлы</a>
+    <a class="btn btn-outline-success" asp-controller="Users" asp-action="GetStats">Статистика по предметам</a>
+    <form asp-controller="Chat" asp-action="CreateRoom" asp-route-id="@Model.Profile.Id">
+        <button type="submit" class="btn btn-outline-success">Написать</button>
+    </form>
+        <div class="col-md-3">
+            <label for="inputFIO" class="form-label">Фамилия</label>
+            <input type="text" disabled class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">
+        </div>
+        <div class="col-md-3">
+            <label for="inputFIO" class="form-label">Имя</label>
+            <input type="text" disabled class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" asp-for="@Model.Profile.FirstName">
+        </div>
+        <div class="col-md-3">
+            <label for="inputFIO" class="form-label">Отчетсво</label>
+            <input type="text" disabled class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" asp-for="@Model.Profile.Otchestvo">
+        </div>
+        <div class="col-md-3">
+            <label for="inputDataHB" class="form-label">День рождения</label>
+            <input type="date" disabled class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
+        </div>
+        @if (!User.IsInRole("Teacher"))
+        {
+            <div class="col-md-3">
+                <label for="inputDepartment" class="form-label">Группа</label>
+                <select disabled class="form-select" asp-for="@Model.Profile.Groups">
+                    <option value="@Model.Profile.GroupsNavigation?.Id">@Model.Profile.GroupsNavigation?.Name</option>
+                </select>
+            </div>
+        }
+        <div class="col-md-3">
+            <label for="inputNumber" class="form-label">О себе</label>
+            <input type="text" disabled class="form-control" id="inputNumber" value="@Model.Profile.About" asp-for="@Model.Profile.About">
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <label for="formFile" class="form-label">Фото</label>
+                <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
+            </div>
+        </div>

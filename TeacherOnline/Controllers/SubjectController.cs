@@ -49,7 +49,8 @@ namespace TeacherOnline.Controllers
         public IActionResult StudyOfSub(int id)
         {
             //ViewData["dep"] = id; //пересмотреть отправляемые данные
-            return View(_profile.GetAll());
+            var userList = _profile.GetAll();
+            return View();
         }
 
         [HttpGet]

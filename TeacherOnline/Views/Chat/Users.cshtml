@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Выбор чата";
+}
+@model IEnumerable<TeacherOnline.DAL.Entities.Chat>
+
+@functions {
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName}";
+        return fioUser;
+    }
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model is null || Model == null || Model.Count() == 0)
+{
+    <h1>Активных чатов не обнаружено</h1>
+    <h3>Для добавления чата, перейдите во вкладку "Поиск", выберите пользователя, в профиле пользователя нажмите "Написать"</h3>
+    return;
+}
+<div class="container">
+    @foreach (var chat in Model)
+    {
+        int id = chat.Id;
+        @if (chat.IdUser1 != Convert.ToInt32(ViewData["Id"]))
+        {
+            <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                @*<input type="number" name="Id" value="@id" hidden>*@
+                <button type="submit" class="btn btn-outline-primary">
+                    @fioUser(chat.IdUser2Navigation)
+                </button>
+            </form>
+            @*<a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id"> @fioUser(chat.IdUser2Navigation)</a>*@
+        }
+        else
+        {
+            <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                @*<input type="number" value="@id" hidden>*@
+                <button type="submit" class="btn btn-outline-primary">
+                    @fioUser(chat.IdUser1Navigation)
+                </button>
+            </form>
+           @* <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">@fioUser(chat.IdUser1Navigation)</a>*@
+        }
+    }
+</div>

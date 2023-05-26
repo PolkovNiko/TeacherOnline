@@ -1,0 +1,194 @@
+﻿@{
+    ViewData["Title"] = "Место для разговора";
+}
+@*@model TeacherOnline.DTO.ViewModel.ChatsVM;*@
+@model TeacherOnline.DAL.Entities.Chat;
+
+@functions{
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName}";
+        return fioUser;
+    }
+}
+@*<div class="container">*@
+@*    <div class="col-4">
+        <div class="side-menu">
+            @foreach (var chat in Model.chats)
+            {
+                @if(Model.chat.Id == chat.Id)
+                {
+                    continue;
+                }
+                @if (chat.IdUser1 != Convert.ToInt32(ViewData["Id"]))
+                {
+                    <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                        @fioUser(chat.IdUser2Navigation)
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                        @fioUser(chat.IdUser1Navigation)
+                    </a>
+                }
+            }
+        </div>
+    </div>*@
+    @*<input type="text" hidden id="username" value="@fioUser(Model).ToString()" />*@
+@*    <div class="col-8">*@
+        @*<div class="container" id="header">
+            @*тут описать верхнюю часть чата как инфу о собеседнике и ссылка на профиль его
+        </div>*@
+        <div class="chat">
+            <a class="link-primary" asp-controller="Chat" asp-action="Users" style="padding:0px 10px">Выбрать чат</a>
+            <div class="chat-body">
+                @foreach(var message in Model.Messages)
+                {
+                    <div class="message">
+                        <header>@fioUser(message.IdAuthorNavigation)</header>
+                        <p>@message.Message1</p>
+                        <footer>@message.Time.ToString("hh:mm dd.MM.yy")</footer>
+                    </div>
+                }
+                @*<p><span class="border border-primary rounded-pill">Проверка</span></p>*@
+                @*<ul id="messagesList"></ul>*@
+                @*тут нужно сделать фиксированный див и прокручиванием сообщений*@
+            </div>
+            @*<div class="hstack gap-3">*@
+                <form class="chat-input" onsubmit="sendMessage(event)" asp-controller="Chat" asp-action="SendMessage">
+                    <input type="hidden" class="form-control" name="chatId" value="@Model.Id">
+                    <input type="hidden" class="form-control" name="userId" value="@Model.IdUser1Navigation.IdNavigation.Email">
+                    <input type="hidden" class="form-control" name="user1Id" value="@Model.IdUser2Navigation.IdNavigation.Email">
+                    <input type="text" class="form-control" name="message" id="message-input">
+                    <button type="submit" id="Sends" class="btn btn-info">Отправить</button>
+                </form>
+        </div>
+       @* </div>
+    </div>
+</div>
+*@
+@section Scripts{
+@*    <link href="path/to/toast.min.css" rel="stylesheet">*@
+    @*<script src="path/to/toast.min.js"></script>*@
+            <script src="
+        https://cdn.jsdelivr.net/npm/@@microsoft/signalr@7.0.5/dist/browser/signalr.min.js
+        "></script>
+    <script src="~/js/messageBuilder.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+        <script type="text/javascript">
+        
+        //hubConnection.on("ReceiveMessage", function (message, username) {
+        //    //для подписи ника - владельца сообщения
+        //    var p = document.createElement("p");
+        //    var li = document.createElement("span");
+        //    p.appendChild(li);
+        //    li.setAttribute('class', 'border border-primary rounded-pill');//тут добавить в стили стиль с именем = mes
+        //    li.setAttribute('style', 'padding:7px')
+        //    document.getElementById("chatroom").appendChild(p);
+        //    li.textContent = `${username}: ${message}`;
+        //    console.log(li.textContent
+        //    //const userNameElem = document.createElement("b");
+        //    //userNameElem.textContent = `${username}: `;
+
+        //    ////само сообщение пользователя
+        //    //let messageElement = document.createElement("p");
+        //    //messageElement.appendChild(userNameElem);
+        //    //messageElement.appendChild(document.createTextNode(message));
+
+        //    //const firstElem = document.getElementById("chatroom").firstChild;
+        //    //document.getElementById("chatroom").insertBefore(elem, firstElem);
+        //});
+       
+        //document.getElementById("Sends").addEventListener("click", function () {
+        //    let message = document.getElementById("Message").value;
+        //    let username = document.getElementById("username").value;
+        //    hubConnection.invoke("SendMessage", message, username)
+        //        .catch(function (err) {
+        //            return console.error(err.toString());
+        //        });
+        //});
+
+
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/Chats")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+
+        hubConnection.on("ReceiveMessage", function (data) {
+            var message = messageBuilder()
+                .createMessage()
+                .withHeader(data.name)
+                .withParagraph(data.text)
+                .withFooter(data.timestamp)
+                .build();
+            document.querySelector('.chat-body').append(message);
+            console.log("Create mess.");
+        })
+
+        hubConnection.start()
+            .then(function () {
+                hubConnection.invoke('joinRoom', '@Model.Id');
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+
+        window.addEventListener('onunload', function () {
+            connection.invoke('leaveRoom', '@Model.Id');
+        })
+
+        var sendMessage = function (event) {
+            event.preventDefault();
+            var data = new FormData(event.target);
+            document.getElementById('message-input').value = '';
+            axios.post('/Chat/SendMessage', data)
+                .then(res => {
+                    console.log("Message Sent!")
+                })
+                .catch(err => {
+                    console.log("Failed to send message!")
+                })
+        }
+
+        //тут прокрутка в низ чата
+        function goTo(){
+            let box = document.querySelector('.chat-body');
+            box.scrollTop = 99999999;
+        }
+        document.addEventListener("DOMContentLoaded", goTo);
+        //async function start() {
+        //    try {
+        //        await hubConnection.start();
+        //        console.log("SignalR Connected.");
+        //    } catch (err) {
+        //        console.log(err);
+        //        setTimeout(start, 5000);
+        //    }
+        //};
+
+        //hubConnection.onclose(async () => {
+        //    await start();
+        //});
+
+
+        //hubConnection.start()
+        //    .then(function () {
+        //        //document.getElementById("Sends").disabled = false;
+        //        console.log("SignalR Connected.");
+        //    })
+        //    .catch(function (err) {
+        //        //console.assert(connection.state === signalR.HubConnectionState.Disconnected);
+        //        //console.log(err);
+        //        //setTimeout(() => start(), 5000);
+        //        return console.error(err.toString());
+        //    });
+
+
+
+    </script>
+
+}

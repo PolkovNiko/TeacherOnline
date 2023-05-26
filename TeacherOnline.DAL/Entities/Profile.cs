@@ -18,6 +18,10 @@ public partial class Profile
 
     public string About { get; set; } = null!;
 
+    public virtual ICollection<Chat> ChatIdUser1Navigations { get; set; } = new List<Chat>();
+
+    public virtual ICollection<Chat> ChatIdUser2Navigations { get; set; } = new List<Chat>();
+
     public virtual ICollection<Estimate> EstimateIdTeacherNavigations { get; set; } = new List<Estimate>();
 
     public virtual ICollection<Estimate> EstimateIdUserNavigations { get; set; } = new List<Estimate>();
@@ -29,6 +33,8 @@ public partial class Profile
     public virtual Group? GroupsNavigation { get; set; }
 
     public virtual User IdNavigation { get; set; } = null!;
+
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Subject> Subjects { get; set; } = new List<Subject>();
 }
