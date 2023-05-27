@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Файлы предмета";
+}
+@model TeacherOnline.DTO.ViewModel.FileVM
+
+<h1>@ViewData["Title"]</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Имя файла</th>
+            <th scope="col">Автор</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var item in Model.files){
+        if(Model.subject.Id == item.IdSub){
+            <tr>
+                <form method="post" asp-controller="File" asp-action="DownloadFile" asp-route-id="@item.Id">
+                    <td><button type="submit" class="btn btn-outline-primary">@item.Name</button></td>
+                </form>
+                <td><a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@item.IdUser">@item.IdUserNavigation.FirstName @item.IdUserNavigation.LastName</a></td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

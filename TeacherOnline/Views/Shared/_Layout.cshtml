@@ -23,7 +23,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if(User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Teacher") || User.IsInRole("Study"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" id="text_color" asp-controller="Home" asp-action="Search">Поиск</a>
@@ -33,8 +33,11 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" id="text_color" asp-controller="Estimate" asp-action="Index">Отметки</a></li>
                                     <li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="Subject">Предметы</a></li>
-                                    <li><a class="dropdown-item" id="text_color" asp-controller="Group" asp-action="Index">Группы</a></li>
-                                    <li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="GroupInSub">Просмотр связей<br />"группа-предмет"</a></li>
+                                    @if (User.IsInRole("Teacher"))
+                                    {
+                                        <li><a class="dropdown-item" id="text_color" asp-controller="Group" asp-action="Index">Группы</a></li>
+                                        <li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="GroupInSub">Просмотр связей<br />"группа-предмет"</a></li>
+                                    }
                                     @*<li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="StudyOfSub">Студенты <br />по предмету</a></li>*@
                                 </ul>
                             </li>

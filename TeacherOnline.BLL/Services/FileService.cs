@@ -2,6 +2,7 @@
 using TeacherOnline.DAL.Entities;
 using TeacherOnline.DAL;
 using File = TeacherOnline.DAL.Entities.File;
+using Microsoft.EntityFrameworkCore;
 
 namespace TeacherOnline.BLL.Services
 {
@@ -16,33 +17,37 @@ namespace TeacherOnline.BLL.Services
 
         public void Create(File item)
         {
-            int index = 0;
-            while (true)
-            {
-                var count = GetAll().Count();
-                item.Id = count == 0 ? 1 : count + 1;
-                var temp = Get(item.Id);
-                if (temp is null)
-                {
-                    _context.Files.Add(item);
-                    _context.SaveChanges();
-                    return;
-                }
-                index++;
-            }
+            _context.Files.Add(item);
+            _context.SaveChanges();
         }
         public void Update(File item)
         {
             var File = _context.Files.FirstOrDefault(u => u.Id == item.Id);
-            if (File != null)
+            if(item.Files != null)
+            {
+                if (File != null)
+                {
+                    File.Name = item.Name;
+                    File.TypeFiles = item.TypeFiles;
+                    File.Files = item.Files;
+                    File.TypeAccess = item.TypeAccess;
+                    File.IdUser = item.IdUser;
+                    _context.Files.Update(File);
+                    _context.SaveChanges();
+                    return;
+                }
+                throw new Exception("fileS is not found?");
+            }
+            else
             {
                 File.Name = item.Name;
-                File.Path = item.Path;
+                File.TypeFiles = item.TypeFiles;
+                File.TypeAccess = item.TypeAccess;
+                File.IdUser = item.IdUser;
                 _context.Files.Update(File);
                 _context.SaveChanges();
                 return;
             }
-            throw new Exception("fileS is not found?");
         }
 
         public void Delete(int id)
@@ -69,7 +74,7 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<File> GetAll()
         {
-            return _context.Files;
+            return _context.Files.Include(u=>u.IdUserNavigation);
         }
     }
 }

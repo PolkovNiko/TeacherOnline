@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Файлы пользователя";
+}
+@model TeacherOnline.DTO.ViewModel.FileVM
+
+<h1>@ViewData["Title"]</h1>
+<form class="row g-3" method="post" enctype="multipart/form-data" asp-controller="File" asp-action="UpdateFile">
+    <input type="number" hidden disabled value="@Model.file.Id" asp-for="@Model.file.Id" />
+    <div class="col-md-3">
+        <label>Изменить файл</label>
+        <input type="file"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
+    </div>
+    <div class="col-md-3">
+        <label>Кому доступен</label>
+        <select id="access" onchange="LoadSubject(this, 'Subject')" asp-for="@Model.file.TypeAccess">
+            @foreach (var item in Model.TypeAccesses)
+            {
+                if(item.Key == Model.file.TypeAccess)
+                {
+                    <option selected value="@item.Key">@item.Value</option>
+                    continue;
+                }
+                <option value="@item.Key">@item.Value</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3" id="Sub" hidden>
+        <label class="form-label">Выберите предмет</label>
+        <select id="Subject" class="form-select" asp-for="@Model.file.IdSub"></select>
+    </div>
+    
+    <button class="btn-success" type="submit">Отправить</button>
+</form>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        function LoadSubject(access, htmlIdUsers) {
+            var listUser = $("#" + htmlIdUsers);
+            var boxSub = $("#Sub");
+            listUser.empty();
+            listUser.append($('<option/>',
+                {
+                    value: null,
+                    text: "Выберите предмет"
+                }));
+            $(listUser[0][0]).attr('disabled', true);
+            $(boxSub).attr('hidden', true);
+            $(listUser[0][0]).attr('selected', true);
+            var selectedaccess = access.options[access.selectedIndex].value;
+            //var selectedSub = selectedSub.options[selectedSub.selectedIndex].value;
+            if (selectedaccess == 1) {
+                $(boxSub).attr('hidden', false);
+                $.getJSON('@Url.Action("GetSubject")', {}, function (subj) {
+                    if (subj != null && !jQuery.isEmptyObject(subj)) {
+                        $.each(subj, function (index, sub) {
+                            if(sub.value == @Model.file.IdSub){
+                                listUser.append($('<option/>', {
+                                    value: sub.value,
+                                    text: sub.text}).attr('selected', true));
+                            }
+                            else {
+                                listUser.append($('<option/>', {
+                                    value: sub.value,
+                                    text: sub.text
+                                }));
+                            }
+                        });
+                    };
+                });
+            }
+            else { return 0; }
+        };
+        function check(){
+            if (@Model.file.TypeAccess == 1) {
+                LoadSubject(document.getElementById('access'), 'Subject');
+            }
+            else {
+                return;
+            }
+        }
+        check.call();
+        //window.onload(function()
+        //{
+        //    if(@Model.file.TypeAccess == 1){
+        //        LoadSubject('access', 'Subject');
+        //    }
+        //    else{
+        //        return;
+        //    }
+        //});
+        //}
+    </script>
+}

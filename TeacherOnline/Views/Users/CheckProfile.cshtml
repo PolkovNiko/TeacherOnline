@@ -29,11 +29,12 @@
 
 <h2>@ViewData["Title"]</h2>
 
-    <a class="btn btn-outline-success" asp-controller="Users" asp-action="GetFile">Файлы</a>
+    <a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
     <a class="btn btn-outline-success" asp-controller="Users" asp-action="GetStats">Статистика по предметам</a>
     <form asp-controller="Chat" asp-action="CreateRoom" asp-route-id="@Model.Profile.Id">
         <button type="submit" class="btn btn-outline-success">Написать</button>
     </form>
+<div class="row g-3" style="width:70vw">
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
             <input type="text" disabled class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">
@@ -69,3 +70,4 @@
                 <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
             </div>
         </div>
+</div>

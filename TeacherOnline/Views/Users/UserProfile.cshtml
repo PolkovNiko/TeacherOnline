@@ -36,7 +36,8 @@
 
 снизу - пример на создание профайла для пользователя админом.... просто пусть будет
 -->
-<form class="row g-3" style="width:1000px" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
+<a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
+<form class="row g-3" style="width:70vw" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
             <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">

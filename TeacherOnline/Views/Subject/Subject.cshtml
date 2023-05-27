@@ -7,7 +7,6 @@
 {
     <a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
     <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь "группа-предмет"<br /></a>
-    <a class="btn btn-success" asp-controller="Subject" asp-action="GroupInSub">Просмотр связей "группа-предмет"<br /></a>
 }
     @*идея: эту страницу сделать доступной для преподавателя и учащегося, а для учащегося сделать возможность просмотр отметок по предмету
         но тогда зачем страница с отметками.....
@@ -16,10 +15,11 @@
     <thead>
         <tr>
             <th scope="col">Название предмета</th>
-@*            @if (User.IsInRole("Teacher"))
-            {*@
+            @if (User.IsInRole("Teacher"))
+            {
                 <th scope="col">Действие</th>
                 <th scope="col">Действие</th>
+            }
                 @*тут бы объединить 2 стролбца в 1*@
              @*тут проверочка на иденцифицированного пользователя*@
         </tr>
@@ -30,17 +30,17 @@
                 <th scope="row">
                     <a class="btn btn-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a>
                 </th>
-@*                @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
-                {*@
-                <td>
-                    <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
-                        <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
-                    </form>
-                </td>
-                <td>
-                    <a class="btn btn-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
-                </td>
-                
+                @if (User.IsInRole("Teacher"))
+                {
+                    <td>
+                        <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
+                            <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

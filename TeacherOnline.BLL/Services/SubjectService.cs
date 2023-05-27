@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
@@ -73,6 +74,18 @@ namespace TeacherOnline.BLL.Services
         public IEnumerable<Subject> GetAll()
         {
             return _context.Subjects.Include(u => u.IdTeacherNavigation);
+        }
+
+        public IEnumerable<Group> GetStudyOfSub(int Idsub)
+        {
+            var group = _context.GroupsInSubs.Include(u => u.IdGroupsNavigation).ThenInclude(u => u.Profiles)
+                                             .Where(u => u.IdSubject == Idsub).Select(u=> u.IdGroupsNavigation).ToList();
+            return group;
+            //if(group.Count != 0)
+            //{
+            //    return group;
+            //}
+            //throw new Exception();
         }
     }
 }

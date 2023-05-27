@@ -2,12 +2,34 @@
     ViewData["Title"] = "Учащиеся в предмете";
     int i = 0;
 }
-@model IEnumerable<TeacherOnline.DAL.Entities.Profile>
+@model IEnumerable<TeacherOnline.DAL.Entities.Group>
 <h2>@ViewData["Title"]</h2>
-
+@functions {
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName}";
+        return fioUser;
+    }
+}
+<a class="btn btn-success" asp-controller="File" asp-action="FileSub" asp-route-id="@Convert.ToInt32(ViewData["Idsub"])">Файлы предмета<br /></a>
 <!--тут цикл для всех пользователей -->
 @foreach(var item in Model)
 {
+    <h1>@item.Name</h1>
+    <div class="container g-3 row" style="">
+    @foreach(var user in item.Profiles)
+    {
+            <div class="col">
+                <div class="card" style="width: 10rem;">
+                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(user.Photo))" class="card-img-top" style="width: 10rem; height:10rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">@fioUser(user)</h5>
+                    </div>
+                </div>
+            </div>
+    }
+    </div>
+}
 
     @*if(item. == ViewData["dep"]?.ToString())
     {
@@ -24,11 +46,10 @@
             </div>
         </div>
     }*@
-    if (i == 0)
+    
+    @if (Model is null || Model == null || Model.Count() == 0)
     {
         <h1>Учащихся в данном предмете нет!!!</h1>
-        <h1>Приходите завтра</h1>
         return;
     }
-}
 

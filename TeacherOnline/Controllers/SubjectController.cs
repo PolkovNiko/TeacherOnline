@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using TeacherOnline.BLL.Interfaces;
 using TeacherOnline.BLL.Services;
@@ -16,14 +17,16 @@ namespace TeacherOnline.Controllers
         IProfile _profile;
         IEstimate _estimate;
         IUser _user;
+        IGroupsInSub _groupsInSub;
 
 
-        public SubjectController(ISubject subject, IProfile profile, IEstimate estimate, IUser user) 
+        public SubjectController(ISubject subject, IProfile profile, IEstimate estimate, IUser user, IGroupsInSub groupsInSub) 
         { 
             _subject = subject;
             _profile = profile;
             _estimate = estimate;
             _user = user;
+            _groupsInSub = groupsInSub;
         }
 
 
@@ -34,7 +37,13 @@ namespace TeacherOnline.Controllers
         public IActionResult Subject()
         {
             ViewData["Id"] = HttpContext.Session.GetInt32("Id").ToString(); //пересмотреть отправляемые данные
-            return View(_subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id")));
+            if (User.IsInRole("Teacher"))
+            {
+                return View(_subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id")));
+            }
+            var user = _profile.Get((int)HttpContext.Session.GetInt32("Id"));
+            var list = _groupsInSub.Find(u => u.IdGroups == (int)user.Groups).Select(u=> u.IdSubjectNavigation);
+            return View(list);
         }
 
         [Authorize(Roles = "Teacher")]
@@ -45,13 +54,13 @@ namespace TeacherOnline.Controllers
             return View(vm);
         }
 
-        [Authorize(Roles = "Teacher")]
         public IActionResult StudyOfSub(int id)
         {
-            //ViewData["dep"] = id; //пересмотреть отправляемые данные
-            var userList = _profile.GetAll();
-            return View();
+            ViewData["Idsub"] = id;
+            var userList = _subject.GetStudyOfSub(id);
+            return View(userList);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Teacher")]

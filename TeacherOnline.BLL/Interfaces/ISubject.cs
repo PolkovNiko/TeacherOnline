@@ -10,5 +10,6 @@ namespace TeacherOnline.BLL.Interfaces
         IEnumerable<Subject> GetAll();
         Subject Get(int id);
         IEnumerable<Subject> Find(Func<Subject, bool> predicate);
+        IEnumerable<Group> GetStudyOfSub(int Idsub);
     }
 }

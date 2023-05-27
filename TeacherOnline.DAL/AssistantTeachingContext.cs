@@ -77,8 +77,8 @@ public partial class AssistantTeachingContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__tmp_ms_x__3214EC07E83A90B0");
 
-            entity.HasOne(d => d.IdTeacherNavigation).WithMany(p => p.Files)
-                .HasForeignKey(d => d.IdTeacher)
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Files)
+                .HasForeignKey(d => d.IdUser)
                 .HasConstraintName("FK_Files_ToProfile");
         });
 

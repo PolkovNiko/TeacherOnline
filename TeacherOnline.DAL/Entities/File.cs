@@ -6,9 +6,15 @@ public partial class File
 
     public string Name { get; set; } = null!;
 
-    public string Path { get; set; } = null!;
+    public string TypeFiles { get; set; } = null!;
 
-    public int IdTeacher { get; set; }
+    public byte[] Files { get; set; } = null!;
 
-    public virtual Profile IdTeacherNavigation { get; set; } = null!;
+    public int TypeAccess { get; set; }
+
+    public int IdUser { get; set; }
+
+    public int IdSub { get; set; }
+
+    public virtual Profile IdUserNavigation { get; set; } = null!;
 }

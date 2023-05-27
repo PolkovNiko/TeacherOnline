@@ -60,16 +60,9 @@ namespace TeacherOnline.Controllers
         [HttpGet]
         public IActionResult CheckProfile(int id)
         {
-            //if(id == (int)HttpContext.Session.GetInt32("Id"))
-            //{
-                UserProfileVM vm = new UserProfileVM();
-                vm.Profile = _profile.Get(id);
-                return View(vm);
-            //}
-            //else
-            //{
-            //    return RedirectToAction("UserProfile");
-            //}
+            UserProfileVM vm = new UserProfileVM();
+            vm.Profile = _profile.Get(id);
+            return View(vm);
         }
 
         [HttpGet]
@@ -108,9 +101,6 @@ namespace TeacherOnline.Controllers
         [HttpPost]
         public IActionResult CreateUser(User user)
         {
-            //var index = _user.GetAll();
-            //user.Id = index.Count() == 0 ? 1 : index.Count() + 1;
-
             _user.Create(user);
             return RedirectToAction("Index", "Home");
         }
