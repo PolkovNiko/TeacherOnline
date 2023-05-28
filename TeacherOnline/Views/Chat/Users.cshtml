@@ -22,7 +22,6 @@
 <div class="container">
     @foreach (var chat in Model)
     {
-        int id = chat.Id;
         @if (chat.IdUser2 == Convert.ToInt32(ViewData["Id"]))
         {
             <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">

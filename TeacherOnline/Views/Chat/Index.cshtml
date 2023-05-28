@@ -37,11 +37,22 @@
     </div>*@
     @*<input type="text" hidden id="username" value="@fioUser(Model).ToString()" />*@
 @*    <div class="col-8">*@
-        @*<div class="container" id="header">
-            @*тут описать верхнюю часть чата как инфу о собеседнике и ссылка на профиль его
-        </div>*@
+        <a class="btn btn-outline-primary d-inline-flex" asp-controller="Chat" asp-action="Users">Выбрать чат</a>
+        <div class="d-inline-flex" style="border:1px solid gray; border-radius:30px; padding:3px" > @*тут рамку красивую сделать и изменить слово выбора чата*@
+            @if(Model.IdUser2 == Convert.ToInt32(ViewData["ID"])){
+                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model..Id">
+                    @fioUser(@Model.IdUser1Navigation)
+                    <img style='width:40px; height:40px; border-radius:20px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.IdUser1Navigation.Photo))" />
+                </a>
+            }
+            else{
+                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model..Id">
+                    @fioUser(@Model.IdUser2Navigation)
+                    <img style='width:40px; height:40px; border-radius:20px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.IdUser2Navigation.Photo))" />
+                </a>
+            }
+        </div>
         <div class="chat">
-            <a class="link-primary" asp-controller="Chat" asp-action="Users" style="padding:0px 10px">Выбрать чат</a>
             <div class="chat-body">
                 @foreach(var message in Model.Messages)
                 {

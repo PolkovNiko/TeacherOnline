@@ -39,6 +39,7 @@ namespace TeacherOnline.Controllers
 
             //chatvm.
             //var index = Convert.ToInt32(HttpContext.Request.QueryString.Value);
+            ViewData["Id"] = HttpContext.Session.GetInt32("Id");
             var chat = _chat.Get(id);
             return View(chat);
         }
@@ -76,7 +77,7 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult> SendMessage(int chatId, string userId,string message, [FromServices] IHubContext<ChatHub> chats)
+        public async  Task<IActionResult> SendMessage(int chatId,string message, [FromServices] IHubContext<ChatHub> chats)
         {
             //тут валидация должна быть.... или на фронте....
             var mes = new Message
