@@ -23,12 +23,12 @@
     @foreach (var chat in Model)
     {
         int id = chat.Id;
-        @if (chat.IdUser1 != Convert.ToInt32(ViewData["Id"]))
+        @if (chat.IdUser2 == Convert.ToInt32(ViewData["Id"]))
         {
             <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
-                @*<input type="number" name="Id" value="@id" hidden>*@
+                @*<input type="number" value="@id" hidden>*@
                 <button type="submit" class="btn btn-outline-primary">
-                    @fioUser(chat.IdUser2Navigation)
+                    @fioUser(chat.IdUser1Navigation)
                 </button>
             </form>
             @*<a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id"> @fioUser(chat.IdUser2Navigation)</a>*@
@@ -36,9 +36,9 @@
         else
         {
             <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
-                @*<input type="number" value="@id" hidden>*@
+                @*<input type="number" name="Id" value="@id" hidden>*@
                 <button type="submit" class="btn btn-outline-primary">
-                    @fioUser(chat.IdUser1Navigation)
+                    @fioUser(chat.IdUser2Navigation)
                 </button>
             </form>
            @* <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">@fioUser(chat.IdUser1Navigation)</a>*@

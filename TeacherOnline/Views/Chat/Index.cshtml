@@ -58,8 +58,8 @@
             @*<div class="hstack gap-3">*@
                 <form class="chat-input" onsubmit="sendMessage(event)" asp-controller="Chat" asp-action="SendMessage">
                     <input type="hidden" class="form-control" name="chatId" value="@Model.Id">
-                    <input type="hidden" class="form-control" name="userId" value="@Model.IdUser1Navigation.IdNavigation.Email">
-                    <input type="hidden" class="form-control" name="user1Id" value="@Model.IdUser2Navigation.IdNavigation.Email">
+                    @*<input type="hidden" class="form-control" name="userId" value="@Model.IdUser1Navigation.IdNavigation.Email">
+                    <input type="hidden" class="form-control" name="user1Id" value="@Model.IdUser2Navigation.IdNavigation.Email">*@
                     <input type="text" class="form-control" name="message" id="message-input">
                     <button type="submit" id="Sends" class="btn btn-info">Отправить</button>
                 </form>

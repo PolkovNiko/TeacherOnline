@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace TeacherOnline.Controllers
         {
             var chat = _chat.Find(u => u.IdUser1 == (int)HttpContext.Session.GetInt32("Id")
             || u.IdUser2 == (int)HttpContext.Session.GetInt32("Id")).ToList();
-            ViewData["Id"] = HttpContext.Session.GetInt32("Id").ToString();
+            ViewData["Id"] = HttpContext.Session.GetInt32("Id");
             return View(chat);
         }
 
@@ -60,8 +61,18 @@ namespace TeacherOnline.Controllers
                 IdUser1 = (int)HttpContext.Session.GetInt32("Id"),
                 IdUser2 = Id
             };
-            var id = _chat.Create(chat);
-            return View("Index", id);
+            var temp = _chat.Get(u=> u.IdUser1 == Id ||  u.IdUser2 == Id 
+                        && u.IdUser1 == (int)HttpContext.Session.GetInt32("Id") || u.IdUser2 == (int)HttpContext.Session.GetInt32("Id"));
+            int id;
+            if(temp == null)
+            {
+                id = _chat.Create(chat);
+            }
+            else
+            {
+                id = _chat.Get(temp.Id).Id;
+            }
+            return RedirectToAction("Index", new { id });
         }
 
         [HttpPost]

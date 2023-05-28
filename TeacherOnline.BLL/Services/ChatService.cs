@@ -48,20 +48,23 @@ namespace TeacherOnline.BLL.Services
 
         public IEnumerable<Chat> Find(Func<Chat, bool> predicate)
         {
-            return _context.Chats.Include(u=> u.Messages).Include(u => u.IdUser1Navigation).Include(u => u.IdUser2Navigation).Where(predicate);
+            return _context.Chats.Include(u=> u.Messages)?.Include(u => u.IdUser1Navigation).Include(u => u.IdUser2Navigation).Where(predicate);
         }
 
         public Chat Get(int id)
         {
-            return _context.Chats.Include(u => u.IdUser1Navigation).ThenInclude(u=> u.IdNavigation)
-                .Include(u => u.IdUser2Navigation).ThenInclude(u => u.IdNavigation).Include(u => u.Messages).FirstOrDefault(u => u.Id == id);
+            return _context.Chats.Include(u => u.IdUser1Navigation)?
+                .Include(u => u.IdUser2Navigation)?
+                .Include(u => u.Messages)?
+                    .ThenInclude(x => x.IdAuthorNavigation)?
+                .FirstOrDefault(u => u.Id == id);
         }
         public Chat Get(Func<Chat, bool> predicate)
         {
-            return _context.Chats.Include(u => u.IdUser1Navigation)
-                .Include(u => u.IdUser2Navigation)
-                .Include(u => u.Messages)
-                    .ThenInclude(x=> x.IdAuthorNavigation)
+            return _context.Chats.Include(u => u.IdUser1Navigation)?
+                .Include(u => u.IdUser2Navigation)?
+                .Include(u => u.Messages)?
+                    .ThenInclude(x=> x.IdAuthorNavigation)?
                 .FirstOrDefault(predicate);
         }
 

@@ -23,31 +23,41 @@ namespace TeacherOnline.BLL.Services
         public void Update(File item)
         {
             var File = _context.Files.FirstOrDefault(u => u.Id == item.Id);
-            if(item.Files != null)
+            if (File != null)
             {
-                if (File != null)
+                if(item.TypeAccess == 1)
                 {
-                    File.Name = item.Name;
-                    File.TypeFiles = item.TypeFiles;
-                    File.Files = item.Files;
+                    if(item.Files != null)
+                    {
+                            File.Name = item.Name;
+                            File.TypeFiles = item.TypeFiles;
+                            File.Files = item.Files;
+                            File.TypeAccess = item.TypeAccess;
+                            File.IdSub = item.IdSub;
+                            _context.Files.Update(File);
+                            _context.SaveChanges();
+                            return;
+                    }
+                    else
+                    {
+                        File.TypeAccess = item.TypeAccess;
+                        File.IdSub = item.IdSub;
+                        _context.Files.Update(File);
+                        _context.SaveChanges();
+                        return;
+                    }
+
+                }
+                else
+                {
                     File.TypeAccess = item.TypeAccess;
-                    File.IdUser = item.IdUser;
+                    File.IdSub = 0;
                     _context.Files.Update(File);
                     _context.SaveChanges();
                     return;
                 }
-                throw new Exception("fileS is not found?");
             }
-            else
-            {
-                File.Name = item.Name;
-                File.TypeFiles = item.TypeFiles;
-                File.TypeAccess = item.TypeAccess;
-                File.IdUser = item.IdUser;
-                _context.Files.Update(File);
-                _context.SaveChanges();
-                return;
-            }
+            throw new Exception("fileS is not found?");
         }
 
         public void Delete(int id)

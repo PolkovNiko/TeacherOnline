@@ -106,11 +106,11 @@ namespace TeacherOnline.Controllers
                 }
                 else throw new Exception("Ошибка файла! ");
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = (int)HttpContext.Session.GetInt32("Id") });
         }
 
         [HttpPost]
-        public ActionResult UpdateFile(File item)
+        public ActionResult UpdateFile(FileVM item)
         {
             //_file.Delete(item.Id);
             //сначало удалить прошлый, а потом залить новый... а хотя тут же перезатирается
@@ -123,13 +123,12 @@ namespace TeacherOnline.Controllers
                     {
                         using (var memorystream = new MemoryStream())
                         {
-                            item.Name = file.FileName;
-                            item.TypeFiles = file.ContentType;
-                            item.TypeAccess = item.TypeAccess;
-                            item.IdUser = (int)HttpContext.Session.GetInt32("Id");
+                            item.file.Name = file.FileName;
+                            item.file.TypeFiles = file.ContentType;
+                            //item.TypeAccess = item.TypeAccess;
                             stream.CopyTo(memorystream);
-                            item.Files = memorystream.ToArray();
-                            _file.Update(item);
+                            item.file.Files = memorystream.ToArray();
+                            _file.Update(item.file);
                         }
                     }
                     else throw new Exception("Ошибка файла! ");
@@ -137,20 +136,17 @@ namespace TeacherOnline.Controllers
             }
             else
             {
-                item.Name = file.FileName;
-                item.TypeFiles = file.ContentType;
-                item.TypeAccess = item.TypeAccess;
-                item.IdUser = (int)HttpContext.Session.GetInt32("Id");
-                _file.Update(item);
+                //item.TypeAccess = item.TypeAccess;
+                _file.Update(item.file);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = (int)HttpContext.Session.GetInt32("Id") });
         }
 
         [HttpPost]
         public ActionResult DeleteFile(int id)
         {
             _file.Delete(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = (int)HttpContext.Session.GetInt32("Id") });
         }
 
         [HttpPost]
