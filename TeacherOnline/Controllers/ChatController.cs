@@ -61,8 +61,8 @@ namespace TeacherOnline.Controllers
                 IdUser1 = (int)HttpContext.Session.GetInt32("Id"),
                 IdUser2 = Id
             };
-            var temp = _chat.Get(u=> u.IdUser1 == Id ||  u.IdUser2 == Id 
-                        && u.IdUser1 == (int)HttpContext.Session.GetInt32("Id") || u.IdUser2 == (int)HttpContext.Session.GetInt32("Id"));
+            var temp = _chat.Get(u=> (u.IdUser1 == Id ||  u.IdUser2 == Id) 
+                        && (u.IdUser1 == (int)HttpContext.Session.GetInt32("Id") || u.IdUser2 == (int)HttpContext.Session.GetInt32("Id")));
             int id;
             if(temp == null)
             {
