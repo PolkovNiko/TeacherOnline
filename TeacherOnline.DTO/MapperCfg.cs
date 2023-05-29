@@ -1,5 +1,4 @@
 ﻿using TeacherOnline.DAL.Entities;
-using TeacherOnline.DTO.ModelsDTO;
 
 namespace TeacherOnline.DTO
 {
@@ -7,10 +6,10 @@ namespace TeacherOnline.DTO
     {
         public MapperCfg()
         {
-            CreateMap<Profile, ProfileDTO>();
-            CreateMap<ProfileDTO, Profile>();
-            CreateMap<IEnumerable<GroupDTO>, IEnumerable<Group>>();
-            CreateMap<GroupDTO, Group>();
+            //CreateMap<Profile, ProfileDTO>();
+            //CreateMap<ProfileDTO, Profile>();
+            //CreateMap<IEnumerable<GroupDTO>, IEnumerable<Group>>();
+            //CreateMap<GroupDTO, Group>();
         }
     }
 }

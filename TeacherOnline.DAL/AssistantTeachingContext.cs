@@ -54,9 +54,8 @@ public partial class AssistantTeachingContext : DbContext
 
         modelBuilder.Entity<Estimate>(entity =>
         {
-            entity.Property(e => e.DateAdd).HasColumnType("date");
-            entity.Property(e => e.DateUpdate).HasColumnType("date");
-            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.DateAdd).HasColumnType("smalldatetime");
+            entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
 
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.Estimates)
                 .HasForeignKey(d => d.IdSubject)

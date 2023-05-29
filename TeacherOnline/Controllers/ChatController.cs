@@ -33,12 +33,6 @@ namespace TeacherOnline.Controllers
         [HttpGet]
         public IActionResult Index(int id)
         {
-            //var chatvm = new ChatsVM();
-            //chatvm.chats = _chat.Find(u => u.IdUser1 == (int)HttpContext.Session.GetInt32("Id")
-            //|| u.IdUser2 == (int)HttpContext.Session.GetInt32("Id")).ToList();
-
-            //chatvm.
-            //var index = Convert.ToInt32(HttpContext.Request.QueryString.Value);
             ViewData["Id"] = HttpContext.Session.GetInt32("Id");
             var chat = _chat.Get(id);
             return View(chat);
@@ -92,7 +86,7 @@ namespace TeacherOnline.Controllers
             {
                 Text = updateMes.Message1,
                 Name = $"{updateMes.IdAuthorNavigation.LastName} {updateMes.IdAuthorNavigation.FirstName}" ,
-                Timestamp = updateMes.Time.ToString("dd/MM/yyyy hh:mm")
+                Timestamp = updateMes.Time.ToString("hh:mm dd.MM.yy")
             });
             return Ok();
         }

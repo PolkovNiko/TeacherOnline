@@ -38,9 +38,7 @@ namespace TeacherOnline.BLL.Services
             var Subject = _context.Subjects.FirstOrDefault(u => u.Id == item.Id);
             if (Subject != null)
             {
-                Subject.IdTeacterPract = item.IdTeacterPract;
                 Subject.Name = item.Name;
-                Subject.PartGroup = item.PartGroup;
                 Subject.About = item.About;
                 _context.Subjects.Update(Subject);
                 _context.SaveChanges();

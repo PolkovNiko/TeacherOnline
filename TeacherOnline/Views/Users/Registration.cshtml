@@ -7,15 +7,15 @@
 <form asp-controller="Users" asp-action="CreateUser" method="post" accept-charset="utf-8">
       <div class="mb-3">
         <label for="InputLogin" class="form-label">Логин</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" asp-for="@Model.Login">
+        <input required max="20" type="text" class="form-control" id="exampleInputEmail1" asp-for="@Model.Login">
         <div id="emailHelp" class="form-text">Никому не сообщайте свой логин</div>
         <label for="exampleInputPassword1" class="form-label">Пароль</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" asp-for="@Model.Password">
+        <input required max="18" type="password" class="form-control" id="exampleInputPassword1" asp-for="@Model.Password">
         <div id="passwordHelpBlock" class="form-text">
-            Ваш пароль должен состоять из 8-20 символов, содержать буквы и цифры и не должен содержать пробелов,эмодзи.
+            Ваш пароль должен состоять из 8-18 символов, содержать буквы и цифры и не должен содержать пробелов,эмодзи.
         </div>
         <label for="InputEmail" class="form-label">Почта</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" asp-for="@Model.Email">
+        <input required max="30" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" asp-for="@Model.Email">
         <div id="emailHelp" class="form-text">Мы данные о вашей почте никому не передаём</div>
         <label for="exampleInputEmail1" class="form-label">Тип пользователя</label>
         <select class="form-select" aria-label="rank" asp-for="@Model.Rank">

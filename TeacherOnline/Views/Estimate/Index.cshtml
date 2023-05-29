@@ -27,6 +27,9 @@
             <th scope="col">Предмет</th>
             <th scope="col">Учащийся</th>
             <th scope="col">Отметка</th>
+            <th scope="col">Тип отметки</th>
+            <th scope="col">Дата добавления</th>
+            <th scope="col">Дата обновления</th>
             <th scope="col">Преподаватель</th>
         </tr>
     </thead>
@@ -37,15 +40,18 @@
                 <th scope="row">@item.IdSubjectNavigation.Name</th>
                 <td>@fioUser(item)</td>
                 <td>@item.Score</td>
+                <td>@Model.TypeEstimate.First(u=>u.Key == item.Type).Value</td>
+                <td>@item.DateAdd</td>
+                <td>@item.DateUpdate</td>
                 <td>@fioTeacher(item)</td>
-@*                @if(item.IdTeacher == (int)ViewData["Id"])
-                {*@
-                <td><a class="btn btn-warning" asp-controller="Estimate" asp-action="UpdateEstimate" asp-route-id="@item.Id">Изменить</a></td>
-                <td>
-                    <form method="post" asp-controller="Estimate" asp-action="DeleteEstimate" asp-route-id="@item.Id">
-                        <button class="btn btn-danger" type="submit">Удалить</button> </form> 
-                </td> 
-                @*}*@
+                @if(item.IdTeacher == (int)ViewData["Id"])
+                {
+                    <td><a class="btn btn-warning" asp-controller="Estimate" asp-action="UpdateEstimate" asp-route-id="@item.Id">Изменить</a></td>
+                    <td>
+                        <form method="post" asp-controller="Estimate" asp-action="DeleteEstimate" asp-route-id="@item.Id">
+                            <button class="btn btn-danger" type="submit">Удалить</button> </form> 
+                    </td> 
+                }
             </tr>
         }
     </tbody>

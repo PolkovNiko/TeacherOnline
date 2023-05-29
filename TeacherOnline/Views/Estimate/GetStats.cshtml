@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "";
+}
+@functions {
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName}";
+        return fioUser;
+    }
+}
+@model TeacherOnline.DTO.ViewModel.EstimateVM;
+
+<h1>Статистика @fioUser(Model.user) по предмету @Model.subject?.Name</h1>
+@{
+    //var data = Json.Serialize(Model.CountEst.Keys.OrderBy(u=> u));
+    SortedDictionary<int, int> dataT = new SortedDictionary<int, int>();
+    SortedDictionary<int, int> dataP = new SortedDictionary<int, int>();
+    SortedDictionary<int, int> dataO = new SortedDictionary<int, int>();
+    if(Model.CountEstTeory.Count > 0)
+    {
+        dataT = new SortedDictionary<int, int>(Model.CountEstTeory);
+    }
+    if(Model.CountEstPrakt.Count > 0)
+    {
+        dataP = new SortedDictionary<int, int>(Model.CountEstPrakt);
+    }
+    if(Model.CountEstOKR.Count > 0)
+    {
+        dataO = new SortedDictionary<int, int>(Model.CountEstOKR);
+    }
+}
+
+
+
+
+<form method="get" asp-controller="Estimate" asp-action="GetStat">
+    <input type="hidden" value="@Model.user.Id" asp-for="@Model.user.Id"/>
+    <label>Предмет для статистики:</label>
+    <select required class="form-select" asp-for="@Model.subject.Id">
+        @foreach(var item in Model.subjects)
+        {
+            if(item.Id == Model.subject?.Id)
+            {
+                <option selected value="@item.Id">@item.Name</option>
+                continue;
+            }
+            <option value="@item.Id">@item.Name</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-outline-success">Показать статистику</button>
+</form>
+
+
+
+
+
+@*<p> @Json.Serialize(tempdata.Keys) @Json.Serialize(tempdata.Values) </p>*@
+@if (dataT.Count > 0 || dataP.Count > 0 || dataO.Count > 0)
+{
+    <div class="container">
+        <h3>Теория</h3>
+        <canvas id="ChartEstTeory" width="600" height="150"></canvas>
+    </div>
+    <div class="container">
+        <h3>Практика</h3>
+        <canvas id="ChartEstPrakt" width="600" height="150"></canvas>
+    </div>
+    <div class="container">
+        <h3>Контрольная</h3>
+        <canvas id="ChartEstOKR" width="600" height="150"></canvas>
+    </div>
+    <div>
+        <h1>Средний бал за предмет:@Model.AvgEstimate.GetValueOrDefault(Model.user.Id)</h1>
+    </div>
+}
+
+@section Scripts{
+   @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>*@
+    @*<script src="
+https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js
+"></script>*@
+
+<script src="~/js/chart/chart.umd.min.js"></script>
+    <script type="text/javascript">
+        const ctxTeory = document.getElementById('ChartEstTeory');
+        const ctxPrakt = document.getElementById('ChartEstPrakt');
+        const ctxOKR = document.getElementById('ChartEstOKR');
+        //const arr = Array.from({length: 10}, (_, index) => index + 1);
+        const chartTeory = new Chart(ctxTeory, {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(dataT.Keys) ,
+                datasets: [{
+                    label: 'Отметки',
+                    data: @Json.Serialize(dataT.Values) ,
+                    borderWidth: 1
+                }]
+            },
+            option:{
+                scales: {
+                    y: {
+                    beginAtZero: true
+                    }
+                }
+            }
+        });
+        const chartPrakt = new Chart(ctxPrakt, {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(dataP.Keys) ,
+                datasets: [{
+                    label: 'Отметки',
+                    data: @Json.Serialize(dataP.Values) ,
+                    borderWidth: 1
+                }]
+            },
+            option:{
+                scales: {
+                    y: {
+                    beginAtZero: true
+                    }
+                }
+            }
+        });
+        const chartOKR = new Chart(ctxOKR, {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(dataO.Keys) ,
+                datasets: [{
+                    label: 'Отметки',
+                    data: @Json.Serialize(dataO.Values) ,
+                    borderWidth: 1
+                }]
+            },
+            option:{
+                scales: {
+                    y: {
+                    beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

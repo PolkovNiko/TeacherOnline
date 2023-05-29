@@ -1,5 +1,4 @@
 ﻿using TeacherOnline.DAL.Entities;
-using TeacherOnline.DTO.ModelsDTO;
 namespace TeacherOnline.DTO.ViewModel
 {
     public class UserProfileVM

@@ -8,10 +8,6 @@ public partial class Subject
 
     public int IdTeacher { get; set; }
 
-    public int IdTeacterPract { get; set; }
-
-    public int PartGroup { get; set; }
-
     public string About { get; set; } = null!;
 
     public virtual ICollection<Estimate> Estimates { get; set; } = new List<Estimate>();

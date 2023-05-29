@@ -8,9 +8,9 @@
 <form asp-controller="Group" asp-action="CreateGroup" method="post">
     <div class="mb-3">
         <label class="form-label">Группа</label>
-        <input type="text" class="form-control" asp-for="@Model.Name">
+        <input required max="50" type="text" class="form-control" asp-for="@Model.Name">
         <label class="form-label">Специальность</label>
-        <input type="text" class="form-control" asp-for="@Model.Specialty">
+        <input required max="50" type="text" class="form-control" asp-for="@Model.Specialty">
     </div>
     <button type="submit" class="btn btn-primary">Создать Группу</button>
 </form>

@@ -23,7 +23,7 @@
     <div class="mb-3">
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Группа</label>
-            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
+            <select required id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
                 @foreach (var item in Model.groups)
                 {
                     if(item.Id == Model.OneGroup.Id)
@@ -37,7 +37,7 @@
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Предмет</label>
-            <select id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject">
+            <select required id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject">
                 @foreach (var item in Model.subjects)
                 {
                     if(item.Id == Model.estimate.IdSubject)
@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Учащийся</label>
-            <select id="Users" class="form-select" asp-for="@Model.estimate.IdUser">
+            <select required id="Users" class="form-select" asp-for="@Model.estimate.IdUser">
                 @foreach (var item in Model.users)
                 {
                     if(item.Id == Model.estimate.IdUser)
@@ -63,8 +63,22 @@
                 }
             </select>
         </div>
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Тип отметки</label>
+            <select required id="Users" class="form-select" asp-for="@Model.estimate.Type">
+                @foreach(var item in Model.TypeEstimate)
+                {
+                    if(item.Key == Model.estimate.Type)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                        continue;
+                    }
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </div>
         <label class="form-label">Отметка</label>
-        <input type="range" class="form-range" min="1" max="10" value="@Model.estimate.Score" asp-for="@Model.estimate.Score">
+        <input required type="range" class="form-range" min="1" max="10" value="@Model.estimate.Score" asp-for="@Model.estimate.Score">
     </div>
     <button type="submit" class="btn btn-primary">Изменить отметку</button>
 </form>

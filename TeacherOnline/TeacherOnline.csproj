@@ -29,4 +29,8 @@
     <ProjectReference Include="..\TeacherOnline.DTO\TeacherOnline.DTO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Chart.js\" />
+  </ItemGroup>
+
 </Project>

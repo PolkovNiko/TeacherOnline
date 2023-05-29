@@ -23,7 +23,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if(User.Identity.IsAuthenticated && User.IsInRole("Teacher") || User.IsInRole("Study"))
+                        @if (User.IsInRole("Teacher") || User.IsInRole("Study"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" id="text_color" asp-controller="Home" asp-action="Search">Поиск</a>
@@ -38,7 +38,6 @@
                                         <li><a class="dropdown-item" id="text_color" asp-controller="Group" asp-action="Index">Группы</a></li>
                                         <li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="GroupInSub">Просмотр связей<br />"группа-предмет"</a></li>
                                     }
-                                    @*<li><a class="dropdown-item" id="text_color" asp-controller="Subject" asp-action="StudyOfSub">Студенты <br />по предмету</a></li>*@
                                 </ul>
                             </li>
                         }
@@ -59,21 +58,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="text_color" data-bs-toggle="dropdown"><i class="fa-regular fa-user"></i></a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @*this be a validate on autorizable users*@
                                 @if (!User.Identity.IsAuthenticated)
                                 {
                                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Autorization">Авторизация</a></li>
                                 }
-                                @*<li>
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="UserProfile">
-
-                                        @if (ViewData["fio"] != null)
-                                        {
-                                            @ViewData["fio"]
-                                        }
-                                        тут через спец возможность фио юзера
-                                    </a>
-                                </li>*@
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <li><a class="dropdown-item" asp-controller="Users" asp-action="UserProfile">Профиль</a></li>

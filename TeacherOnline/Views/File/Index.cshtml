@@ -10,7 +10,7 @@
     <form class="row g-3" method="post" enctype="multipart/form-data" asp-controller="File" asp-action="CreateFile">
             <div class="col-md-3">
                 <label>Добавить файл</label>
-                <input class="form-control" type="file"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
+                <input required class="form-control" type="file"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
             </div>
             <div class="col-md-3">
                 <label>Кому доступен</label>
@@ -19,9 +19,6 @@
                 {
                     <option value="@item.Key">@item.Value</option>
                 }
-                @*<option value="0">Только мне</option>
-                    <option value="1">Только предмету</option>
-                    <option value="2">Всем</option>*@
                 </select>
             </div>
             <div class="col-md-3" id="Sub" hidden>

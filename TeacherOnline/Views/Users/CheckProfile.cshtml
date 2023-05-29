@@ -30,7 +30,10 @@
 <h2>@ViewData["Title"]</h2>
 
     <a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
-    <a class="btn btn-outline-success" asp-controller="Users" asp-action="GetStats">Статистика по предметам</a>
+    @if(Model.Profile.IdNavigation.Rank == "Study" && Model.Profile.Id == (int)ViewData["Id"])
+    {
+        <a class="btn btn-outline-success" asp-controller="Estimate" asp-action="GetStats" asp-route-id="@Model.Profile.Id">Статистика по предметам</a>
+    }
     <form asp-controller="Chat" asp-action="CreateRoom" asp-route-id="@Model.Profile.Id">
         <button type="submit" class="btn btn-outline-success">Написать</button>
     </form>
@@ -51,7 +54,7 @@
             <label for="inputDataHB" class="form-label">День рождения</label>
             <input type="date" disabled class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
         </div>
-        @if (!User.IsInRole("Teacher"))
+        @if (!User.IsInRole("Teacher") && Model.Profile.IdNavigation.Rank != "Teacher")
         {
             <div class="col-md-3">
                 <label for="inputDepartment" class="form-label">Группа</label>

@@ -37,28 +37,30 @@
 снизу - пример на создание профайла для пользователя админом.... просто пусть будет
 -->
 <a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
+<a class="btn btn-outline-success" asp-controller="Estimate" asp-action="GetStats" asp-route-id="@Model.Profile.Id">Статистика по предметам</a>
+
 <form class="row g-3" style="width:70vw" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">
+            <input required type="text" class="form-control" id="inputFIO" placeholder="Иванов" value="@Model.Profile.LastName" asp-for="@Model.Profile.LastName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" asp-for="@Model.Profile.FirstName">
+            <input required type="text" class="form-control" id="inputFIO" placeholder="Иван" value="@Model.Profile.FirstName" asp-for="@Model.Profile.FirstName">
         </div>
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Отчетсво</label>
-            <input type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" asp-for="@Model.Profile.Otchestvo">
+            <input required type="text" class="form-control" id="inputFIO" placeholder="Иванович" value="@Model.Profile.Otchestvo" asp-for="@Model.Profile.Otchestvo">
         </div>
         <div class="col-md-3">
             <label for="inputDataHB" class="form-label">День рождения</label>
-            <input type="date" class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
+            <input required type="date" class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
         </div>
         @if (!User.IsInRole("Teacher"))
         {
             <div class="col-md-3">
                 <label for="inputDepartment" class="form-label">Группа</label>
-                <select class="form-select" asp-for="@Model.Profile.Groups">
+                <select required class="form-select" asp-for="@Model.Profile.Groups">
                     @foreach (var item in Model.Group)
                     {
                         @if(Model.Profile.Groups == item.Id)
@@ -73,7 +75,7 @@
         }
         <div class="col-md-3">
             <label for="inputNumber" class="form-label">О себе</label>
-            <input type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" asp-for="@Model.Profile.About">
+            <input required type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" asp-for="@Model.Profile.About">
         </div>
         <div class="row">
             <div class="col-md-5">

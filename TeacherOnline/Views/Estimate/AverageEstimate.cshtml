@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = Model.subject.Name;
+}
+@functions {
+    public string fioUser(TeacherOnline.DAL.Entities.Profile profile)
+    {
+        string fioUser = $"{profile.LastName} {profile.FirstName}";
+        return fioUser;
+    }
+}
+@model TeacherOnline.DTO.ViewModel.EstimateVM;
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Учащийся</th>
+            <th scope="col">Отметка</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.users)
+        {
+            <tr>
+                <td>@fioUser(item)</td>
+                <td>@Model.AvgEstimate[item.Id]</td>
+            </tr>
+        }
+    </tbody>
+</table>

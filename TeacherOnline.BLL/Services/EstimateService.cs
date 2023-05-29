@@ -31,6 +31,8 @@ namespace TeacherOnline.BLL.Services
                 estimate.IdTeacher = item.IdTeacher;
                 estimate.IdUser = item.IdUser;
                 estimate.Score = item.Score;
+                estimate.Type = item.Type;
+                estimate.DateUpdate = item.DateUpdate;
                 _context.Estimates.Update(estimate);
                 _context.SaveChanges();
                 return;

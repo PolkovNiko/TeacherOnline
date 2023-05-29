@@ -7,20 +7,9 @@
     <div class="mb-3">
         <input readonly hidden type="number" class="form-control" value="@Model.sub.Id" asp-for="@Model.sub.Id">
         <label class="form-label">Название предмета</label>
-        <input type="text" class="form-control" value="@Model.sub.Name" asp-for="@Model.sub.Name">
-        <div class="col-md-3">
-            <label for="inputDepartment" class="form-label">Группа</label>
-            <select class="form-select" asp-for="@Model.sub.IdTeacterPract">
-                @foreach (var item in Model.teacher)
-                {
-                    <option value="@item.Id">@item.FirstName @item.LastName @item.Otchestvo</option>
-                }
-            </select>
-        </div>
-        <label class="form-label">Номер подгруппы для доп. преподавателя</label>
-        <input type="range" class="form-range" min="0" max="1" value="@Model.sub.PartGroup" asp-for="@Model.sub.PartGroup">
+        <input required type="text" class="form-control" value="@Model.sub.Name" asp-for="@Model.sub.Name">
         <label class="form-label">О предмете</label>
-        <input type="text" class="form-control" value="@Model.sub.About" asp-for="@Model.sub.About">
+        <input required type="text" class="form-control" value="@Model.sub.About" asp-for="@Model.sub.About">
     </div>
     <button type="submit" class="btn btn-primary">Изменить предмет</button>
 </form>

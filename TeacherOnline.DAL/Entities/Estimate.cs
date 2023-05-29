@@ -12,7 +12,7 @@ public partial class Estimate
 
     public int Score { get; set; }
 
-    public string? Type { get; set; }
+    public int? Type { get; set; }
 
     public DateTime? DateAdd { get; set; }
 

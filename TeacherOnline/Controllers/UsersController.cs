@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using TeacherOnline.Models;
 using TeacherOnline.DAL.Entities;
 using TeacherOnline.BLL.Interfaces;
-using TeacherOnline.DTO.ModelsDTO;
 using TeacherOnline.DTO.ViewModel;
 using TeacherOnline.DTO;
 
@@ -60,6 +59,7 @@ namespace TeacherOnline.Controllers
         [HttpGet]
         public IActionResult CheckProfile(int id)
         {
+            ViewData["Id"] = (int)HttpContext.Session.GetInt32("Id");
             UserProfileVM vm = new UserProfileVM();
             vm.Profile = _profile.Get(id);
             return View(vm);
@@ -128,7 +128,8 @@ namespace TeacherOnline.Controllers
             {
                 using(var stream = files.OpenReadStream())
                 {
-                    _profile.Create(_convert.ConvetToProfile(newProfile), stream);
+                    //_profile.Create(_convert.ConvetToProfile(newProfile.), stream);
+                    _profile.Create(newProfile.Profile, stream);
                 }
             }
             return RedirectToAction("Index", "Home");
@@ -147,7 +148,7 @@ namespace TeacherOnline.Controllers
                 {
                     using (var stream = files.OpenReadStream())
                     {
-                        _profile.Create(newProfile.Profile, stream);
+                        _profile.Update(newProfile.Profile, stream);
                     }
                 }
             } 

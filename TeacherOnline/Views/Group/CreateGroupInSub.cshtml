@@ -9,7 +9,7 @@
     <div class="mb-3">
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Группа</label>
-            <select class="form-select" asp-for="@Model.groupsInSub.IdGroups">
+            <select required class="form-select" asp-for="@Model.groupsInSub.IdGroups">
                 @foreach (var item in Model.groups)
                 {
                     <option value="@item.Id">@item.Name</option>
@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Предмет</label>
-            <select class="form-select" asp-for="@Model.groupsInSub.IdSubject">
+            <select required class="form-select" asp-for="@Model.groupsInSub.IdSubject">
                 @foreach (var item in Model.subjects)
                 {
                     <option value="@item.Id">@item.Name</option>

@@ -42,6 +42,10 @@ namespace TeacherOnline.Controllers
                 return View(_subject.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id")));
             }
             var user = _profile.Get((int)HttpContext.Session.GetInt32("Id"));
+            if(user is null)
+            {
+                return RedirectToAction("UserProfile", "Users");
+            }
             var list = _groupsInSub.Find(u => u.IdGroups == (int)user.Groups).Select(u=> u.IdSubjectNavigation);
             return View(list);
         }

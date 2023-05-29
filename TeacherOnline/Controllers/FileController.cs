@@ -90,22 +90,25 @@ namespace TeacherOnline.Controllers
         {
             var item = vm.file;
             var file = HttpContext.Request.Form.Files.FirstOrDefault();
-            using (var stream = file.OpenReadStream())
+            if (file != null && file.Length > 0)
             {
-                if (stream.Length > 0 && stream != null)
+                using (var stream = file.OpenReadStream())
                 {
-                    using (var memorystream = new MemoryStream())
+                    if (stream.Length > 0 && stream != null)
                     {
-                        item.Name = file.FileName;
-                        item.TypeFiles = file.ContentType;
-                        item.IdUser = (int)HttpContext.Session.GetInt32("Id");
-                        stream.CopyTo(memorystream);
-                        item.Files = memorystream.ToArray();
-                        _file.Create(item);
+                        using (var memorystream = new MemoryStream())
+                        {
+                            item.Name = file.FileName;
+                            item.TypeFiles = file.ContentType;
+                            item.IdUser = (int)HttpContext.Session.GetInt32("Id");
+                            stream.CopyTo(memorystream);
+                            item.Files = memorystream.ToArray();
+                            _file.Create(item);
+                        }
                     }
                 }
-                else throw new Exception("Ошибка файла! ");
             }
+            else NotFound("Нет файла"); //throw new Exception("Ошибка файла!");
             return RedirectToAction("Index", new { id = (int)HttpContext.Session.GetInt32("Id") });
         }
 
@@ -125,7 +128,6 @@ namespace TeacherOnline.Controllers
                         {
                             item.file.Name = file.FileName;
                             item.file.TypeFiles = file.ContentType;
-                            //item.TypeAccess = item.TypeAccess;
                             stream.CopyTo(memorystream);
                             item.file.Files = memorystream.ToArray();
                             _file.Update(item.file);
@@ -136,7 +138,6 @@ namespace TeacherOnline.Controllers
             }
             else
             {
-                //item.TypeAccess = item.TypeAccess;
                 _file.Update(item.file);
             }
             return RedirectToAction("Index", new { id = (int)HttpContext.Session.GetInt32("Id") });

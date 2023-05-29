@@ -21,7 +21,7 @@
     <div class="mb-3">
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Группа</label>
-            <select id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
+            <select required id="Group" class="form-select" onchange="LoadDLOnSubject(this, 'Subject', 'Users');">
                 <option selected disabled value="">Выберите группу</option>
                 @foreach (var item in Model.groups)
                 {
@@ -31,17 +31,28 @@
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Предмет</label>
-            <select id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject"></select>
+            <select required id="Subject" class="form-select" onchange="LoadDLOnUsers(this, 'Users')" asp-for="@Model.estimate.IdSubject"></select>
         </div>
         <div class="col-md-3">
             <label for="inputDepartment" class="form-label">Учащийся</label>
-            <select id="Users" class="form-select" asp-for="@Model.estimate.IdUser"></select>
+            <select required id="Users" class="form-select" asp-for="@Model.estimate.IdUser"></select>
+        </div>
+        <div class="col-md-3">
+            <label for="inputDepartment" class="form-label">Тип отметки</label>
+            <select required id="Users" class="form-select" asp-for="@Model.estimate.Type">
+                @foreach(var item in Model.TypeEstimate)
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
         </div>
         <label class="form-label">Отметка</label>
-        <input type="range" class="form-range" min="1" max="10" asp-for="@Model.estimate.Score">
+        <input required type="range" class="form-range" min="1" max="10" asp-for="@Model.estimate.Score">
     </div>
     <button type="submit" class="btn btn-primary">Создать отметку</button>
 </form>
+
+
 @section Scripts{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

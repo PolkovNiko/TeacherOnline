@@ -40,13 +40,13 @@
         <a class="btn btn-outline-primary d-inline-flex" asp-controller="Chat" asp-action="Users">Выбрать чат</a>
         <div class="d-inline-flex" style="border:1px solid gray; border-radius:30px; padding:3px" > @*тут рамку красивую сделать и изменить слово выбора чата*@
             @if(Model.IdUser2 == Convert.ToInt32(ViewData["ID"])){
-                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model..Id">
+                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model.IdUser1Navigation.Id">
                     @fioUser(@Model.IdUser1Navigation)
                     <img style='width:40px; height:40px; border-radius:20px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.IdUser1Navigation.Photo))" />
                 </a>
             }
             else{
-                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model..Id">
+                <a asp-controller="Users" asp-action="CheckProfile" asp-route-id="@Model.IdUser2Navigation.Id">
                     @fioUser(@Model.IdUser2Navigation)
                     <img style='width:40px; height:40px; border-radius:20px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.IdUser2Navigation.Photo))" />
                 </a>
@@ -71,7 +71,7 @@
                     <input type="hidden" class="form-control" name="chatId" value="@Model.Id">
                     @*<input type="hidden" class="form-control" name="userId" value="@Model.IdUser1Navigation.IdNavigation.Email">
                     <input type="hidden" class="form-control" name="user1Id" value="@Model.IdUser2Navigation.IdNavigation.Email">*@
-                    <input type="text" class="form-control" name="message" id="message-input">
+                    <input required type="text" class="form-control" name="message" id="message-input">
                     <button type="submit" id="Sends" class="btn btn-info">Отправить</button>
                 </form>
         </div>
@@ -80,48 +80,14 @@
 </div>
 *@
 @section Scripts{
-@*    <link href="path/to/toast.min.css" rel="stylesheet">*@
-    @*<script src="path/to/toast.min.js"></script>*@
-            <script src="
-        https://cdn.jsdelivr.net/npm/@@microsoft/signalr@7.0.5/dist/browser/signalr.min.js
-        "></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/js/messageBuilder.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@7.0.5/dist/browser/signalr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-
-        <script type="text/javascript">
-        
-        //hubConnection.on("ReceiveMessage", function (message, username) {
-        //    //для подписи ника - владельца сообщения
-        //    var p = document.createElement("p");
-        //    var li = document.createElement("span");
-        //    p.appendChild(li);
-        //    li.setAttribute('class', 'border border-primary rounded-pill');//тут добавить в стили стиль с именем = mes
-        //    li.setAttribute('style', 'padding:7px')
-        //    document.getElementById("chatroom").appendChild(p);
-        //    li.textContent = `${username}: ${message}`;
-        //    console.log(li.textContent
-        //    //const userNameElem = document.createElement("b");
-        //    //userNameElem.textContent = `${username}: `;
-
-        //    ////само сообщение пользователя
-        //    //let messageElement = document.createElement("p");
-        //    //messageElement.appendChild(userNameElem);
-        //    //messageElement.appendChild(document.createTextNode(message));
-
-        //    //const firstElem = document.getElementById("chatroom").firstChild;
-        //    //document.getElementById("chatroom").insertBefore(elem, firstElem);
-        //});
-       
-        //document.getElementById("Sends").addEventListener("click", function () {
-        //    let message = document.getElementById("Message").value;
-        //    let username = document.getElementById("username").value;
-        //    hubConnection.invoke("SendMessage", message, username)
-        //        .catch(function (err) {
-        //            return console.error(err.toString());
-        //        });
-        //});
-
+    <script type="text/javascript">
 
         const hubConnection = new signalR.HubConnectionBuilder()
             .withUrl("/Chats")
