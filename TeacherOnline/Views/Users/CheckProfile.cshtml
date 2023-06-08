@@ -30,13 +30,16 @@
 <h2>@ViewData["Title"]</h2>
 
     <a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
-    @if(Model.Profile.IdNavigation.Rank == "Study" && Model.Profile.Id == (int)ViewData["Id"])
+    @if(Model.Profile.IdNavigation.Rank == "Study" || Model.Profile.Id == (int)ViewData["Id"] && Model.Profile.IdNavigation.Rank != "Teacher")
     {
         <a class="btn btn-outline-success" asp-controller="Estimate" asp-action="GetStats" asp-route-id="@Model.Profile.Id">Статистика по предметам</a>
     }
-    <form asp-controller="Chat" asp-action="CreateRoom" asp-route-id="@Model.Profile.Id">
-        <button type="submit" class="btn btn-outline-success">Написать</button>
-    </form>
+    @if(Model.Profile.Id != (int)ViewData["Id"]){
+
+        <form asp-controller="Chat" asp-action="CreateRoom" asp-route-id="@Model.Profile.Id">
+            <button type="submit" class="btn btn-outline-success">Написать</button>
+        </form>
+    }
 <div class="row g-3" style="width:70vw">
         <div class="col-md-3">
             <label for="inputFIO" class="form-label">Фамилия</label>
@@ -54,7 +57,7 @@
             <label for="inputDataHB" class="form-label">День рождения</label>
             <input type="date" disabled class="form-control" id="inputDataHB" value="@date" asp-for="@Model.Profile.Date">
         </div>
-        @if (!User.IsInRole("Teacher") && Model.Profile.IdNavigation.Rank != "Teacher")
+        @if (Model.Profile.IdNavigation.Rank != "Teacher")
         {
             <div class="col-md-3">
                 <label for="inputDepartment" class="form-label">Группа</label>
@@ -70,7 +73,7 @@
         <div class="row">
             <div class="col-md-5">
                 <label for="formFile" class="form-label">Фото</label>
-                <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
+                <img style='width:120px; height:120px; margin:6px' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
             </div>
         </div>
 </div>

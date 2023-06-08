@@ -12,12 +12,13 @@ using TeacherOnline.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connection = builder.Configuration.GetConnectionString("DataBases");
+string? connection = builder.Configuration.GetConnectionString("DataBase");
 builder.Services.AddDbContext<AssistantTeachingContext>(option => option.UseSqlServer(connection));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(cfg => { 
-    cfg.IdleTimeout = TimeSpan.FromSeconds(3600);
+    cfg.IdleTimeout = TimeSpan.FromDays(5);
+    cfg.Cookie.IsEssential = true;
     cfg.Cookie.Name = "TempSession";
     cfg.Cookie.HttpOnly = true;
 });

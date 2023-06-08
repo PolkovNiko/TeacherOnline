@@ -37,7 +37,10 @@
 снизу - пример на создание профайла для пользователя админом.... просто пусть будет
 -->
 <a class="btn btn-outline-success" asp-controller="File" asp-action="Index" asp-route-id="@Model.Profile.Id">Файлы</a>
-<a class="btn btn-outline-success" asp-controller="Estimate" asp-action="GetStats" asp-route-id="@Model.Profile.Id">Статистика по предметам</a>
+@if (!User.IsInRole("Teacher"))
+{
+    <a class="btn btn-outline-success" asp-controller="Estimate" asp-action="GetStats" asp-route-id="@Model.Profile.Id">Статистика по предметам</a>
+}
 
 <form class="row g-3" style="width:70vw" asp-controller="Users" asp-action="UpdateProfile" enctype="multipart/form-data" method="post">
         <div class="col-md-3">
@@ -73,7 +76,7 @@
                 </select>
             </div>
         }
-        <div class="col-md-3">
+        <div class="col-md-12">
             <label for="inputNumber" class="form-label">О себе</label>
             <input required type="text" class="form-control" id="inputNumber" value="@Model.Profile.About" asp-for="@Model.Profile.About">
         </div>
@@ -81,10 +84,10 @@
             <div class="col-md-5">
                 <label for="formFile" class="form-label">Загрузить фото</label>
                 <input class="form-control" type="file" id="formFile" asp-for="@Model.Profile.Photo">
-                <img style='width:120px; height:120px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
+                <img style='width:120px; height:120px; margin-top:5px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Profile.Photo))" />
             </div>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Сохранить данные</button>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-outline-success">Сохранить данные</button>
         </div>
 </form>

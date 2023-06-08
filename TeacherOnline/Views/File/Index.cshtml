@@ -13,8 +13,8 @@
                 <input required class="form-control" type="file"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
             </div>
             <div class="col-md-3">
-                <label>Кому доступен</label>
-                <select id="access" onchange="LoadSubject(this, 'Subject')" asp-for="@Model.file.TypeAccess">
+                <label>Кому доступен</label><br/>
+                <select id="access" class="form-select" onchange="LoadSubject(this, 'Subject')" asp-for="@Model.file.TypeAccess">
                 @foreach (var item in Model.TypeAccesses)
                 {
                     <option value="@item.Key">@item.Value</option>
@@ -22,10 +22,10 @@
                 </select>
             </div>
             <div class="col-md-3" id="Sub" hidden>
-                <label class="form-label">Выберите предмет</label>
+                <label>Выберите предмет</label>
                 <select id="Subject" class="form-select" asp-for="@Model.file.IdSub"></select>
             </div>
-            <button class="btn-success" type="submit">Отправить</button>
+            <button class="btn btn-outline-success form-control" type="submit">Отправить</button>
         </form>
     @*</div>*@
     <table class="table">
@@ -47,10 +47,10 @@
                     <td>@Model.TypeAccesses[item.TypeAccess]</td>
                     <td>@Model.subjects.Find(u=> u.Id== item.IdSub)?.Name</td>
                     <td>
+                        <a class="btn btn-outline-warning" asp-controller="File" asp-action="UpdateFile" asp-route-id="@item.Id">Заменить</a>
                         <form method="post" asp-controller="File" asp-action="DeleteFile" asp-route-id="@item.Id">
-                            <button type="submit" class="btn btn-warning">Удалить</button>    
+                            <button type="submit" class="btn btn-outline-danger">Удалить</button>    
                         </form>
-                        <a class="btn btn-danger" asp-controller="File" asp-action="UpdateFile" asp-route-id="@item.Id">Заменить</a>
                     </td>
                 }
             </tr>

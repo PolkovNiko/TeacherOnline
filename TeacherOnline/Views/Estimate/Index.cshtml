@@ -18,17 +18,55 @@
 <h1>@ViewData["Title"]</h1>
 @if (User.IsInRole("Teacher"))
 {
-    <a class="btn btn-success" asp-controller="Estimate" asp-action="CreateEstimate">Создать отметку<br /></a>
+    <a class="btn btn-outline-primary m-3" asp-controller="Estimate" asp-action="CreateEstimate">Создать отметку<br /></a>
 }
-
+<form method="get" class="hstack gap-3 m-3" asp-action="Index" asp-controller="Estimate">
+    <select required name="selectedSubject" class="form-select" asp-for="@Model.Fltr.SelectedSubject">
+        <option >Все отметки</option>
+        @foreach (var item in Model.DisplaySubj)
+        {
+            if(item.Key == Model.subject?.Id)
+            {
+                <option selected value="@item.Key">@item.Value</option>
+                continue;
+            }
+            <option value="@item.Key">@item.Value</option>
+        }
+    </select>
+    @if (User.IsInRole("Teacher"))
+    {
+        <select required name="selectedUser" class="form-select" asp-for="@Model.Fltr.SelectedUser">
+            <option value="0">Все учащиеся</option>
+            @foreach (var item in Model.DisplayUser)
+            {
+                if(item.Key == Model.user?.Id)
+                {
+                    <option selected value="@item.Key">@item.Value</option>
+                    continue;
+                }
+                <option value="@item.Key">@item.Value</option>
+            }
+        </select>
+    }
+    <button type="submit" class="btn btn-outline-primary">Поиск</button>
+</form>
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">Предмет</th>
+            <th scope="col"><a asp-action="Index" 
+                asp-route-selectedSubject="@Model.Fltr.SelectedSubject"
+                asp-route-selectedUser="@Model.Fltr.SelectedUser"
+                asp-route-sortOrder="@Model.Str.IdSubSort">Предмет</a></th>
             <th scope="col">Учащийся</th>
-            <th scope="col">Отметка</th>
+            <th scope="col"><a asp-action="Index" 
+                asp-route-selectedSubject="@Model.Fltr.SelectedSubject"
+                asp-route-selectedUser="@Model.Fltr.SelectedUser"
+                asp-route-sortOrder="@Model.Str.ScoreSort">Отметка</a></th>
             <th scope="col">Тип отметки</th>
-            <th scope="col">Дата добавления</th>
+            <th scope="col"><a asp-action="Index" 
+                asp-route-selectedSubject="@Model.Fltr.SelectedSubject"
+                asp-route-selectedUser="@Model.Fltr.SelectedUser"
+                asp-route-sortOrder="@Model.Str.DataAddSort">Дата добавления</a></th>
             <th scope="col">Дата обновления</th>
             <th scope="col">Преподаватель</th>
         </tr>
@@ -46,10 +84,11 @@
                 <td>@fioTeacher(item)</td>
                 @if(item.IdTeacher == (int)ViewData["Id"])
                 {
-                    <td><a class="btn btn-warning" asp-controller="Estimate" asp-action="UpdateEstimate" asp-route-id="@item.Id">Изменить</a></td>
+                    <td><a class="btn btn-outline-warning" asp-controller="Estimate" asp-action="UpdateEstimate" asp-route-id="@item.Id">Изменить</a></td>
                     <td>
                         <form method="post" asp-controller="Estimate" asp-action="DeleteEstimate" asp-route-id="@item.Id">
-                            <button class="btn btn-danger" type="submit">Удалить</button> </form> 
+                            <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                        </form>
                     </td> 
                 }
             </tr>

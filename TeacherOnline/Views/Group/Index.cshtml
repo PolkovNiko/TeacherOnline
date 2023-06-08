@@ -6,7 +6,7 @@
 <h1>@ViewData["Title"]</h1>
 @if (User.IsInRole("Teacher"))
 {
-    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroup">Создать группу<br /></a>
+    <a class="btn btn-outline-primary" asp-controller="Group" asp-action="CreateGroup">Создать группу<br /></a>
 }
 
 <table class="table">
@@ -22,10 +22,10 @@
             <tr>
                 <th scope="row">@item.Name</th>
                 <td>@item.Specialty</td>
-                <td><a class="btn btn-warning" asp-controller="Group" asp-action="UpdateGroup" asp-route-id="@item.Id">Изменить</a></td>
+                <td><a class="btn btn-outline-warning" asp-controller="Group" asp-action="UpdateGroup" asp-route-id="@item.Id">Изменить</a></td>
                 <td>
                     <form method="post" asp-controller="Group" asp-action="DeleteGroup" asp-route-id="@item.Id">
-                        <button class="btn btn-danger" type="submit">Удалить</button>
+                        <button class="btn btn-outline-danger" type="submit">Удалить</button>
                 </form> </td> 
             </tr>
         }

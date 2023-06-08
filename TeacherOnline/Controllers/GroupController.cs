@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TeacherOnline.BLL.Interfaces;
@@ -7,6 +8,7 @@ using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 using TeacherOnline.DTO.ViewModel;
 using TeacherOnline.Models;
+using static TeacherOnline.DTO.ViewModel.GroupInSubVM;
 
 namespace TeacherOnline.Controllers
 {
@@ -46,11 +48,23 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpGet]
-        public IActionResult GroupInSub()
+        public IActionResult GroupInSub(SortStateGroupInSub sortOrder = SortStateGroupInSub.NameAsc)
         {
             ViewData["Id"] = HttpContext.Session.GetInt32("Id");
             GroupInSubVM vm = new GroupInSubVM();
             vm.gisList = _groupInSub.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
+
+            ViewData["GroupIdSubSort"] = sortOrder == SortStateGroupInSub.NameAsc ? SortStateGroupInSub.NameDesc : SortStateGroupInSub.NameAsc;
+            ViewData["IdGroupSort"] = sortOrder == SortStateGroupInSub.IdGroupAsc ? SortStateGroupInSub.IdGroupDesc : SortStateGroupInSub.IdGroupAsc;
+            vm.gisList = sortOrder switch
+            {
+                SortStateGroupInSub.NameDesc => vm.gisList.OrderByDescending(u => u.IdSubjectNavigation.Name),
+                SortStateGroupInSub.IdGroupAsc => vm.gisList.OrderBy(u => u.IdGroupsNavigation.Name),
+                SortStateGroupInSub.IdGroupDesc => vm.gisList.OrderByDescending(u => u.IdGroupsNavigation.Name),
+                _ => vm.gisList.OrderBy(u => u.IdSubjectNavigation.Name)
+            };
+            vm.gisList.AsQueryable().AsNoTracking();
+
             return View(vm);
         }
 

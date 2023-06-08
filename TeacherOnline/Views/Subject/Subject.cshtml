@@ -5,8 +5,10 @@
 <h2>@ViewData["Title"]</h2>
 @if (User.IsInRole("Teacher"))
 {
-    <a class="btn btn-success" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
-    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь "группа-предмет"<br /></a>
+    <div class="m-3">
+        <a class="btn btn-outline-primary" asp-controller="Subject" asp-action="CreateSub">Создать предмет<br /></a>
+        <a class="btn btn-outline-primary" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь "группа-предмет"<br /></a>
+    </div>
 }
     @*идея: эту страницу сделать доступной для преподавателя и учащегося, а для учащегося сделать возможность просмотр отметок по предмету
         но тогда зачем страница с отметками.....
@@ -28,17 +30,17 @@
         @foreach(var item in Model){
             <tr>
                 <th scope="row">
-                    <a class="btn btn-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a>
+                    <a class="link-primary" asp-controller="Subject" asp-action="StudyOfSub" asp-route-id="@item.Id"> @item.Name <br /></a>
                 </th>
                 @if (User.IsInRole("Teacher"))
                 {
                     <td>
-                        <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
-                            <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
-                        </form>
+                        <a class="btn btn-outline-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
                     </td>
                     <td>
-                        <a class="btn btn-warning" asp-controller="Subject" asp-action="UpdateSub" asp-route-id="@item.Id">Изменить</a>
+                        <form mehtod="post" asp-contoller="Subject" asp-action="DeleteSub" asp-route-id="@item.Id">
+                            <button class="btn btn-outline-danger" type="submit" value="delete">Удалить</button>
+                        </form>
                     </td>
                 }
             </tr>

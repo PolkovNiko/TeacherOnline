@@ -11,11 +11,13 @@
     }
 }
 <a class="btn btn-success" asp-controller="File" asp-action="FileSub" asp-route-id="@Convert.ToInt32(ViewData["Idsub"])">Файлы предмета<br /></a>
-<a class="btn btn-success" asp-controller="Estimate" asp-action="AverageEstimate" asp-route-id="@Convert.ToInt32(ViewData["Idsub"])">Средний балл группы<br /></a>
-<!--тут цикл для всех пользователей -->
+@*<a class="btn btn-success" asp-controller="Estimate" asp-action="AverageEstimate" asp-route-id="@Convert.ToInt32(ViewData["Idsub"])">Средний балл группы<br /></a>
+*@<!--тут цикл для всех пользователей -->
 @foreach(var item in Model)
 {
-    <h1>@item.Name</h1>
+    <h3><a class="btn btn-success" asp-controller="Estimate" asp-action="AverageEstimate" 
+        asp-route-id="@Convert.ToInt32(ViewData["Idsub"])"
+        asp-route-idgroup="@item.Id">@item.Name</a></h3>
     <div class="container g-3 row" style="">
     @foreach(var user in item.Profiles)
     {

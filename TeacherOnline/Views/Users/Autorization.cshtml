@@ -6,7 +6,7 @@
 
 
 <link rel="stylesheet" href="/css/site.css" />
-<form asp-controller="Users" asp-action="Autorization" method="post">
+<form asp-controller="Users" asp-action="Autorizations" method="post">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Логин</label>
         <input required max="20" type="text" class="form-control" id="exampleInputEmail1" asp-for="Login">
@@ -15,5 +15,5 @@
         <label for="exampleInputPassword1" class="form-label">Пароль</label>
         <input required max="18" type="password" class="form-control" id="exampleInputPassword1" asp-for="Password">
       </div>
-      <button type="submit" class="btn btn-primary">Войти</button>
+      <button type="submit" class="btn btn-outline-success">Войти</button>
 </form>

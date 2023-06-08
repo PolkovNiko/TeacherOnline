@@ -5,14 +5,14 @@
 <h2>@ViewData["Title"]</h2>
 @if (User.IsInRole("Teacher"))
 {
-    <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь<br /></a>
+    <a class="btn btn-outline-primary" asp-controller="Group" asp-action="CreateGroupInSub">Создать связь<br /></a>
 }
 
 <table class="table table-sm">
     <thead>
         <tr>
-            <th scope="col">Предмет</th>
-            <th scope="col">Группа</th>
+            <th scope="col"><a asp-action="GroupInSub" asp-route-sortOrder="@ViewBag.GroupIdSubSort">Предмет</a></th>
+            <th scope="col"><a asp-action="GroupInSub" asp-route-sortOrder="@ViewBag.IdGroupSort">Группа</a></th>
             @if (User.IsInRole("Teacher"))
             {
                 <th scope="col">Действие</th>
@@ -33,12 +33,12 @@
                 @if(item.IdTeacher == Convert.ToInt32(ViewData["Id"]))
                 {
                     <td>
-                        <form mehtod="post" asp-contoller="Group" asp-action="DeleteGroupInSub" asp-route-id="@item.Id">
-                            <button class="btn btn-danger" type="submit" value="delete">Удалить</button>
-                        </form>
+                        <a class="btn btn-outline-warning" asp-controller="Group" asp-action="UpdateGroupInSub" asp-route-id="@item.Id">Изменить</a>
                     </td>
                     <td>
-                        <a class="btn btn-warning" asp-controller="Group" asp-action="UpdateGroupInSub" asp-route-id="@item.Id">Изменить</a>
+                        <form mehtod="post" asp-contoller="Group" asp-action="DeleteGroupInSub" asp-route-id="@item.Id">
+                            <button class="btn btn-outline-danger" type="submit" value="delete">Удалить</button>
+                        </form>
                     </td>
                 }
             </tr>

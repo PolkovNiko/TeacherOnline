@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Runtime.Intrinsics.X86;
 using TeacherOnline.BLL.Interfaces;
@@ -10,6 +13,7 @@ using TeacherOnline.DAL;
 using TeacherOnline.DAL.Entities;
 using TeacherOnline.DTO.ViewModel;
 using TeacherOnline.Models;
+using static TeacherOnline.DTO.ViewModel.EstimateVM;
 
 namespace TeacherOnline.Controllers
 {
@@ -34,17 +38,87 @@ namespace TeacherOnline.Controllers
         //Method Get
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int selectedSubject, int selectedUser, SortStateEstimate sortOrder = SortStateEstimate.DateAddDesc)
         {
             ViewData["Id"] = (int)HttpContext.Session.GetInt32("Id");
             var vm = new EstimateVM();
-            if(User.IsInRole("Teacher"))
-                vm.estimateList = _estimate.Find(u=>u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
+            if(selectedSubject == 0 && selectedUser == 0)
+            {
+                if (User.IsInRole("Teacher"))
+                    vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"));
+                else
+                    vm.estimateList = _estimate.Find(u => u.IdUser == (int)HttpContext.Session.GetInt32("Id"));
+            }
+            else if(selectedSubject != 0 && selectedUser == 0)
+            {
+                if (User.IsInRole("Teacher"))
+                    vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id") && u.IdSubject == selectedSubject);
+                else
+                    vm.estimateList = _estimate.Find(u => u.IdUser == (int)HttpContext.Session.GetInt32("Id") && u.IdSubject == selectedSubject);
+                vm.subject = _subject.Get(selectedSubject);
+            }
+            else if(selectedSubject == 0 && selectedUser != 0 && User.IsInRole("Teacher"))
+            {
+                vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id") && u.IdUser == selectedUser);
+                vm.subject = _subject.Get(selectedSubject);
+            }
             else
             {
-                vm.estimateList = _estimate.Find(u => u.IdUser == (int)HttpContext.Session.GetInt32("Id"));
+                vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id") 
+                && u.IdUser == selectedUser && u.IdSubject == selectedSubject);
+                vm.subject = _subject.Get(selectedSubject);
             }
+
+
+            vm.subjects = _estimate.Find(u=> u.IdUser == (int)HttpContext.Session.GetInt32("Id") || u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"))
+                                   .Select(u=> u.IdSubjectNavigation);
+            foreach(var item in vm.subjects)
+            {
+                if (!vm.DisplaySubj.ContainsKey(item.Id))
+                {
+                    vm.DisplaySubj.Add(item.Id, item.Name);
+                    continue;
+                }
+                else continue;
+            }
+
+            if (User.IsInRole("Teacher"))
+            {
+                vm.users = _estimate.Find(u=> u.IdUser == (int)HttpContext.Session.GetInt32("Id") || u.IdTeacher == (int)HttpContext.Session.GetInt32("Id"))
+                                       .Select(u=> u.IdUserNavigation);
+                foreach(var item in vm.users)
+                {
+                    if (!vm.DisplayUser.ContainsKey(item.Id))
+                    {
+                        vm.DisplayUser.Add(item.Id, fioUser(item));
+                        continue;
+                    }
+                    else continue;
+                }
+            }
+
+            ViewData["IdSubSort"] = sortOrder == SortStateEstimate.IdSubAsc ? SortStateEstimate.IdSubDesc : SortStateEstimate.IdSubAsc;
+            ViewData["ScoreSort"] = sortOrder == SortStateEstimate.ScoreAsc ? SortStateEstimate.ScoreDesc : SortStateEstimate.ScoreAsc;
+            ViewData["DateAddSort"] = sortOrder == SortStateEstimate.DateAddAsc ? SortStateEstimate.DateAddDesc : SortStateEstimate.DateAddAsc;
+            vm.estimateList = sortOrder switch
+            {
+                SortStateEstimate.IdSubDesc => vm.estimateList.OrderByDescending(u => u.IdSubject),
+                SortStateEstimate.ScoreAsc => vm.estimateList.OrderBy(u => u.Score),
+                SortStateEstimate.ScoreDesc => vm.estimateList.OrderByDescending(u => u.Score),
+                SortStateEstimate.DateAddAsc => vm.estimateList.OrderBy(u => u.DateAdd),
+                SortStateEstimate.DateAddDesc => vm.estimateList.OrderByDescending(u => u.DateAdd),
+                _ => vm.estimateList.OrderBy(u => u.IdSubject)
+            };
+            vm.estimateList.AsQueryable().AsNoTracking();
+            vm.Str = new Sorted(sortOrder);
+            vm.Fltr = new Filters(selectedSubject, selectedUser);
             return View(vm);
+        }
+
+        public string fioUser(Profile profile)
+        {
+            string fioUser = $"{profile.LastName} {profile.FirstName}";
+            return fioUser;
         }
 
         [HttpGet]
@@ -72,27 +146,27 @@ namespace TeacherOnline.Controllers
         }
 
         [HttpGet]
-        public IActionResult AverageEstimate(int id)
+        public IActionResult AverageEstimate(int id, int idgroup)
         {
             var vm = new EstimateVM();
-            vm.OneGroup = _groupsInSub.Get(u => u.IdSubject == id).IdGroupsNavigation;
-            vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study" && u.Groups == vm.OneGroup.Id);
+            vm.OneGroup = _groupsInSub.Get(u => u.IdSubject == id && u.IdGroups == idgroup).IdGroupsNavigation;
+            vm.users = _profile.Find(u => u.IdNavigation.Rank == "Study" && u.Groups == idgroup);
             vm.subject = _subject.Get(id);
-            vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id") || u.IdSubject == id).OrderBy(u => u.IdUser);
+            vm.estimateList = _estimate.Find(u => u.IdTeacher == (int)HttpContext.Session.GetInt32("Id") || u.IdSubject == id)
+                .OrderBy(u => u.IdUserNavigation.LastName);
             List<Estimate> tempList = vm.estimateList.OrderBy(u => u.IdUser).ToList();
             int currentUser = 0;
-            var estList = AvgEst(vm, tempList, currentUser, id);
+            //var estList = AvgEst(vm, tempList, currentUser, id);
+            vm.AvgEstimate = AvgEst(vm, tempList, currentUser, id);
+            //vm.CountEstTeory = CountEstimateTeoty(vm.estimateList);
             return View(vm);
         }
         [HttpGet]
         public IActionResult GetStats(int id)
         {
             var vm = new EstimateVM();
-            //vm.estimateList = _estimate.Find(u=> u.IdSubject == 3);
             vm.user = _profile.Get(id);
             vm.subjects = _groupsInSub.Find(u => u.IdGroups == vm.user.Groups).Select(u => u.IdSubjectNavigation);
-            //vm.subject = _subject.Get(3);
-            //vm.CountEst = CountEstimates(vm.estimateList);
             return View(vm);
         }
 
@@ -109,6 +183,8 @@ namespace TeacherOnline.Controllers
             vm.AvgEstimate = AvgEstToUser(vm.estimateList.ToList(), vm.user.Id, vm.subject.Id, vm.AvgEstimate);
             return View("GetStats", vm);
         }
+
+        //Helps method
         private Dictionary<int,int> CountEstimateTeoty(IEnumerable<Estimate> list)
         {
             EstimateVM vm = new EstimateVM();
@@ -228,20 +304,20 @@ namespace TeacherOnline.Controllers
                 }
                 else
                 {
-                    tempAvg = (est / iEst + okr / iOkr) / 2;
+                    tempAvg = (Math.Round(est / iEst, MidpointRounding.AwayFromZero) + okr) / (iOkr +1);
                 }
             }
-            avg.Add(currentUser, tempAvg);
+            avg.Add(currentUser, Math.Round(tempAvg, MidpointRounding.AwayFromZero));
             return avg;
         }
-        public EstimateVM AvgEst(EstimateVM vm, List<Estimate> tempList, int currentUser, int id)
+        public Dictionary<int, double> AvgEst(EstimateVM vm, List<Estimate> tempList, int currentUser, int id)
         {
             foreach (var item in vm.users)
             {
                 currentUser = item.Id;
-                float tempAvg = 0;
-                float est = 0;
-                float okr = 0;
+                double tempAvg = 0;
+                double est = 0;
+                double okr = 0;
                 //int user = 0;
                 int iEst = 0;
                 int iOkr = 0;
@@ -276,10 +352,10 @@ namespace TeacherOnline.Controllers
                     }
                     else
                     {
-                        tempAvg = (est / iEst + okr / iOkr) / 2;
+                        tempAvg = (Math.Round((est / iEst), MidpointRounding.AwayFromZero) + okr) / (iOkr+1);
                     }
                 }
-                vm.AvgEstimate.Add(currentUser, tempAvg);
+                vm.AvgEstimate.Add(currentUser, Math.Round(tempAvg, MidpointRounding.AwayFromZero));
                 foreach (var items in tempList.ToList())
                 {
                     if (currentUser == items.IdUser)
@@ -290,8 +366,10 @@ namespace TeacherOnline.Controllers
                 }
             }
 
-            return vm;
+            return vm.AvgEstimate;
         }
+        //--------------------
+
 
         [HttpGet]
         [Authorize(Roles = "Teacher")]

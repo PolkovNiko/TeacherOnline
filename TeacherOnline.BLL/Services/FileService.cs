@@ -50,11 +50,25 @@ namespace TeacherOnline.BLL.Services
                 }
                 else
                 {
-                    File.TypeAccess = item.TypeAccess;
-                    File.IdSub = 0;
-                    _context.Files.Update(File);
-                    _context.SaveChanges();
-                    return;
+                    if(item.Files != null)
+                    {
+                        File.Files = item.Files;
+                        File.TypeFiles = item.TypeFiles;
+                        File.Name = item.Name;
+                        File.TypeAccess = item.TypeAccess;
+                        File.IdSub = 0;
+                        _context.Files.Update(File);
+                        _context.SaveChanges();
+                        return;
+                    }
+                    else
+                    {
+                        File.TypeAccess = item.TypeAccess;
+                        File.IdSub = 0;
+                        _context.Files.Update(File);
+                        _context.SaveChanges();
+                        return;
+                    }
                 }
             }
             throw new Exception("fileS is not found?");

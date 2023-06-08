@@ -34,7 +34,7 @@ public partial class AssistantTeachingContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DataBases");
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DataBase");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

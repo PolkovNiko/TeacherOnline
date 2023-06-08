@@ -19,28 +19,30 @@
     <h3>Для добавления чата, перейдите во вкладку "Поиск", выберите пользователя, в профиле пользователя нажмите "Написать"</h3>
     return;
 }
-<div class="container">
+<div class="row d-inline-flex p-2 bd-highlight">
     @foreach (var chat in Model)
     {
-        @if (chat.IdUser2 == Convert.ToInt32(ViewData["Id"]))
-        {
-            <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
-                @*<input type="number" value="@id" hidden>*@
-                <button type="submit" class="btn btn-outline-primary">
-                    @fioUser(chat.IdUser1Navigation)
-                </button>
-            </form>
-            @*<a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id"> @fioUser(chat.IdUser2Navigation)</a>*@
-        }
-        else
-        {
-            <form method="get" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
-                @*<input type="number" name="Id" value="@id" hidden>*@
-                <button type="submit" class="btn btn-outline-primary">
-                    @fioUser(chat.IdUser2Navigation)
-                </button>
-            </form>
-           @* <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">@fioUser(chat.IdUser1Navigation)</a>*@
-        }
+        <div class="col">
+            @if (chat.IdUser2 == Convert.ToInt32(ViewData["Id"]))
+            {
+                <form method="get" class="m-3" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                    @*<input type="number" value="@id" hidden>*@
+                    <button type="submit" class="btn btn-outline-primary">
+                        @fioUser(chat.IdUser1Navigation)
+                    </button>
+                </form>
+                @*<a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id"> @fioUser(chat.IdUser2Navigation)</a>*@
+            }
+            else
+            {
+                <form method="get" class="m-3" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">
+                    @*<input type="number" name="Id" value="@id" hidden>*@
+                    <button type="submit" class="btn btn-outline-primary">
+                        @fioUser(chat.IdUser2Navigation)
+                    </button>
+                </form>
+               @* <a class="btn btn-outline-primary" asp-controller="Chat" asp-action="Index" asp-route-id="@chat.Id">@fioUser(chat.IdUser1Navigation)</a>*@
+            }
+        </div>
     }
 </div>

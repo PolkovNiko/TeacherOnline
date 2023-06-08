@@ -35,6 +35,7 @@ namespace TeacherOnline.Controllers
         [HttpGet]
         public IActionResult Autorization()
         {
+
             return View();
         }
 
@@ -91,11 +92,16 @@ namespace TeacherOnline.Controllers
         //Method Post
 
         [HttpPost]
-        public async Task<IResult> Autorization(User users)
+        public async Task<IActionResult> Autorizations(User users)
         {
-            await HttpContext.SignInAsync(_auth.LogIn(users));
+            var user = _auth.LogIn(users);
+            if (user is null)
+            {
+                return RedirectToAction("Autorization");
+            }
+            await HttpContext.SignInAsync(user);
             HttpContext.Session.SetInt32("Id", _auth.Id);
-            return Results.Redirect("/");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

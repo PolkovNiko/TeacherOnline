@@ -17,7 +17,7 @@
     <thead>
         <tr>
             <th scope="col">Учащийся</th>
-            <th scope="col">Отметка</th>
+            <th scope="col">Отметка за семестр</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +25,14 @@
         {
             <tr>
                 <td>@fioUser(item)</td>
-                <td>@Model.AvgEstimate[item.Id]</td>
+                @if (Double.IsNaN(Model.AvgEstimate[item.Id]))
+                {
+                    <td>нет отметки</td>
+                }
+                else
+                {
+                    <td>@Model.AvgEstimate[item.Id]</td>
+                }
             </tr>
         }
     </tbody>

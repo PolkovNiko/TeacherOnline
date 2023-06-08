@@ -30,10 +30,7 @@
     }
 }
 
-
-
-
-<form method="get" asp-controller="Estimate" asp-action="GetStat">
+<form method="get" class="hstack gap-3 m-3" asp-controller="Estimate" asp-action="GetStat">
     <input type="hidden" value="@Model.user.Id" asp-for="@Model.user.Id"/>
     <label>Предмет для статистики:</label>
     <select required class="form-select" asp-for="@Model.subject.Id">
@@ -47,7 +44,7 @@
             <option value="@item.Id">@item.Name</option>
         }
     </select>
-    <button type="submit" class="btn btn-outline-success">Показать статистику</button>
+    <button type="submit" class="btn btn-outline-primary">Показать статистику</button>
 </form>
 
 

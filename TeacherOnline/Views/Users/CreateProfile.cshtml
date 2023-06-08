@@ -39,17 +39,17 @@
                 </select>
             </div>    
         }
-        <div class="col-md-3">
+        <div class="col-md-12">
             <label for="inputNumber" class="form-label">О себе</label>
         <input required type="text" class="form-control" id="inputNumber" asp-for="@Model.Profile.About">
         </div>
         <div class="row">
             <div class="col-md-5">
                 <label for="formFile" class="form-label">Загрузить фото</label>
-            <input required class="form-control" type="file" id="formFile" accept="image/*" asp-for="@Model.Profile.Photo">
+                <input required class="form-control" type="file" id="formFile" accept="image/*" asp-for="@Model.Profile.Photo">
             </div>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Создать профиль</button>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-outline-success">Создать профиль</button>
         </div>
     </form>

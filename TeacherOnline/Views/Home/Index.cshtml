@@ -3,9 +3,20 @@
 }
 @model IEnumerable<TeacherOnline.DAL.Entities.User>
 
-    <h1>Дипломная работа</h1>
-    <h1>Пока так, придумать наполнение (приветствие) @User.Identity.IsAuthenticated</h1>
-    <h1>User.IsInRole == @User.IsInRole("Teacher")</h1>
+<h1>Добро пожаловать в веб-приложение "Преподаватель Online"!</h1>
+    @if(!User.Identity.IsAuthenticated){
+        <h1>Для работы на сайте нужно авторизироваться</h1>
+    }
+    else if(!User.IsInRole("Admin"))
+    {
+    <p>
+        <strong>"Преподаватель Online"</strong> - это инновационный проект, разработанный Хирсой Станиславом Юрьевичем.<br/>
+        Мое приложение предоставляет возможности по использованию инструментов для обмена файлами, сообщениями, подсчёта отметок за семестр как для группы,
+        так и персональной для каждого учащегося. Я уверен, что мое веб-приложение поможет учащимся и преподавателям получить максимальную пользу от данного проекта.
+    </p>
+    }
+    
+
 
 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
@@ -29,10 +40,10 @@
                     <td>@item.Password</td>
                     <td>@item.Rank</td>
                     <td>@item.Email</td>
-                    <td><a class="btn btn-warning" asp-controller="Users" asp-action="UpdateUser" asp-route-id="@item.Id">Изменить</a></td> @*тут изменить на "изменить"*@
+                    <td><a class="btn btn-outline-warning" asp-controller="Users" asp-action="UpdateUser" asp-route-id="@item.Id">Изменить</a></td> @*тут изменить на "изменить"*@
                     <td>
                         <form method="post" asp-controller="Users" asp-action="DeleteUser" asp-route-id="@item.Id">
-                            <button class="btn btn-danger" type="submit">Удалить</button>
+                            <button class="btn btn-outline-danger" type="submit">Удалить</button>
                     </form> </td> 
                 </tr>
             }

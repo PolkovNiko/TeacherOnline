@@ -46,10 +46,10 @@
                 }
             </select>
         </div>
-        <label class="form-label">Отметка</label>
-        <input required type="range" class="form-range" min="1" max="10" asp-for="@Model.estimate.Score">
+        <label class="form-label">Отметка: <output id="value"></output></label>
+        <input required type="range" class="form-range" min="1" max="10" id="estInput" asp-for="@Model.estimate.Score">
     </div>
-    <button type="submit" class="btn btn-primary">Создать отметку</button>
+    <button type="submit" class="btn btn-outline-success">Создать отметку</button>
 </form>
 
 
@@ -58,6 +58,15 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script type="text/javascript">
+
+        const value = document.querySelector("#value")
+        const input = document.querySelector("#estInput")
+        value.textContent = input.value
+        input.addEventListener("input", (event) => {
+            value.textContent = event.target.value
+        })
+
+
         var tempGroupId = 0;
         function LoadDLOnUsers(SubjectId, htmlIdUsers) {
             var listUser = $("#" + htmlIdUsers);

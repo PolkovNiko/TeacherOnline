@@ -10,7 +10,7 @@
         <input required max="20" type="text" class="form-control" id="exampleInputEmail1" asp-for="@Model.Login">
         <div id="emailHelp" class="form-text">Никому не сообщайте свой логин</div>
         <label for="exampleInputPassword1" class="form-label">Пароль</label>
-        <input required max="18" type="password" class="form-control" id="exampleInputPassword1" asp-for="@Model.Password">
+        <input required minlength="8" max="18" type="password" class="form-control" id="exampleInputPassword1" asp-for="@Model.Password">
         <div id="passwordHelpBlock" class="form-text">
             Ваш пароль должен состоять из 8-18 символов, содержать буквы и цифры и не должен содержать пробелов,эмодзи.
         </div>
@@ -24,5 +24,5 @@
             <option value="Teacher">Преподаватель</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary">Создать пользователя</button>
+      <button type="submit" class="btn btn-outline-success">Создать пользователя</button>
 </form>

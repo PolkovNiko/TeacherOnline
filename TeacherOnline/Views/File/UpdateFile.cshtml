@@ -8,11 +8,11 @@
     <input type="number" hidden value="@Model.file.Id" asp-for="@Model.file.Id" />
     <div class="col-md-3">
         <label>Изменить файл</label>
-        <input type="file"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
+        <input type="file" class="form-control"  accept=".doc, .docx, .txt, .xlsx, .pptx, .xls, .ppt" asp-for="@Model.file.Files"/>
     </div>
     <div class="col-md-3">
         <label>Кому доступен</label>
-        <select id="access" onchange="LoadSubject(this, 'Subject')" asp-for="@Model.file.TypeAccess">
+        <select id="access" class="form-select" onchange="LoadSubject(this, 'Subject')" asp-for="@Model.file.TypeAccess">
             @foreach (var item in Model.TypeAccesses)
             {
                 if(item.Key == Model.file.TypeAccess)
@@ -25,11 +25,11 @@
         </select>
     </div>
     <div class="col-md-3" id="Sub" hidden>
-        <label class="form-label">Выберите предмет</label>
+        <label>Выберите предмет</label>
         <select id="Subject" class="form-select" asp-for="@Model.file.IdSub"></select>
     </div>
     
-    <button class="btn-success" type="submit">Отправить</button>
+    <button class="btn btn-outline-success" type="submit">Отправить</button>
 </form>
 @section Scripts{
     <script type="text/javascript">

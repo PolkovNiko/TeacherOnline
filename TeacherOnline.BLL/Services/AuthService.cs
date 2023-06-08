@@ -19,7 +19,7 @@ namespace TeacherOnline.BLL.Services
         public ClaimsPrincipal LogIn(User user)
         {
             User? valid = _context.Users.FirstOrDefault(val => val.Login == user.Login && val.Password == user.Password);
-            if (valid is null) throw new Exception("вы кто такие? я вас не звал. покиньте сайт!");   //тут вариант отдельный блок валидации написать, возможно в сервис и использовать здесь через DI
+            if (valid is null) return null;   //тут вариант отдельный блок валидации написать, возможно в сервис и использовать здесь через DI
             Id = valid.Id;
             var claims = new List<Claim> { new Claim(ClaimTypes.Role, valid.Rank), new Claim(ClaimTypes.Email, valid.Email) };
             var claimIdentitys = new ClaimsIdentity(claims, "Cookies");
