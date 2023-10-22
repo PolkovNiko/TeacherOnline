@@ -13,6 +13,8 @@ using TeacherOnline.SignalR;
 var builder = WebApplication.CreateBuilder(args);
 
 string? connection = builder.Configuration.GetConnectionString("DataBase");
+#region Services 
+
 builder.Services.AddDbContext<AssistantTeachingContext>(option => option.UseSqlServer(connection));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
@@ -38,7 +40,6 @@ builder.Services.AddTransient<IConvertModels, ConvertService>();
 builder.Services.AddTransient<IGroupsInSub, GroupsInSubService>();
 builder.Services.AddTransient<IChat, ChatService>();
 builder.Services.AddTransient<IMessage, MessageService>();
-
 // Add services to the container.
 builder.Services.AddAuthentication("Cookies")
     .AddCookie(adress =>
@@ -48,6 +49,7 @@ builder.Services.AddAuthentication("Cookies")
     });
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
+#endregion
 
 var app = builder.Build();
 
